@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -25,6 +26,18 @@ public class WishlistRepositoryImpl implements WishlistRepository {
                         .build());
 
         wishlist.getProducts().add(product);
+        repository.save(wishlist);
+    }
+
+    @Override
+    public void remove(String clientId, String productId) {
+        Wishlist wishlist = repository.findByClientId(clientId)
+                .orElseThrow(() -> new IllegalArgumentException("Wishlist not found"));
+
+        List<Product> mutableProducts = new ArrayList<>(wishlist.getProducts());
+        mutableProducts.removeIf(product -> product.getId().equals(productId));
+
+        wishlist.setProducts(mutableProducts);
         repository.save(wishlist);
     }
 }
