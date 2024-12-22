@@ -5,30 +5,30 @@ import com.marvim.wishlist.domain.entity.Wishlist;
 import com.marvim.wishlist.domain.ports.output.WishlistRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-public class GetWishlistUseCaseImplTest {
+class CheckProductInWishlistUseCaseImplTest {
 
     @Mock
     private WishlistRepository wishlistRepository;
 
     @InjectMocks
-    private GetWishlistUseCaseImpl getWishlistUseCase;
+    private CheckProductInWishlistUseCaseImpl checkProductInWishlistUseCase;
 
     private Wishlist wishlist;
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
+
         Product product1 = Product.builder()
                 .id("product-id-1")
                 .name("Garrafa")
@@ -50,17 +50,26 @@ public class GetWishlistUseCaseImplTest {
     }
 
     @Test
-    void shouldReturnWishlist() {
-        when(wishlistRepository.findByClientId("client-id")).thenReturn(Optional.ofNullable(wishlist));
+    void shouldReturnTrueWhenProductExistsInWishlist() {
+        String clientId = "client-id";
+        String productId = "product-id-1";
 
-        Wishlist result = getWishlistUseCase.execute("client-id");
+        when(wishlistRepository.findByClientId(clientId)).thenReturn(Optional.of(wishlist));
 
-        assertNotNull(result);
-        assertEquals("client-id", result.getClientId());
-        assertEquals(2, result.getProducts().size());
-        assertEquals("product-id-1", result.getProducts().get(0).getId());
-        assertEquals("product-id-2", result.getProducts().get(1).getId());
+        boolean result = checkProductInWishlistUseCase.execute(clientId, productId);
 
-        verify(wishlistRepository, times(1)).findByClientId("client-id");
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    void shouldReturnFalseWhenProductDoesNotExistInWishlist() {
+        String clientId = "client-id";
+        String productId = "non-existing-product-id";
+
+        when(wishlistRepository.findByClientId(clientId)).thenReturn(Optional.of(wishlist));
+
+        boolean result = checkProductInWishlistUseCase.execute(clientId, productId);
+
+        assertThat(result).isFalse();
     }
 }

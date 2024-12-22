@@ -8,6 +8,7 @@ import com.marvim.wishlist.domain.entity.Wishlist;
 import com.marvim.wishlist.domain.ports.input.AddProductToWishlistUseCase;
 import com.marvim.wishlist.domain.ports.input.GetWishlistUseCase;
 import com.marvim.wishlist.domain.ports.input.RemoveProductFromWishlistUseCase;
+import com.marvim.wishlist.domain.ports.input.CheckProductInWishlistUseCase; // Novo UseCase
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,6 +39,9 @@ public class WishlistControllerTest {
 
     @Mock
     private GetWishlistUseCase getWishlistUseCase;
+
+    @Mock
+    private CheckProductInWishlistUseCase checkProductInWishlistUseCase;
 
     @InjectMocks
     private WishlistController wishlistController;
@@ -118,5 +122,23 @@ public class WishlistControllerTest {
                 });
 
         verify(getWishlistUseCase).execute(clientId);
+    }
+
+    @Test
+    void shouldCheckProductInWishlist() throws Exception {
+        String clientId = "client-id";
+        String productId = "product-id-1";
+
+        when(checkProductInWishlistUseCase.execute(clientId, productId)).thenReturn(true);
+
+        mockMvc.perform(get("/wishlist/{clientId}/{productId}/exists", clientId, productId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(result -> {
+                    String content = result.getResponse().getContentAsString();
+                    assertThat(Boolean.parseBoolean(content)).isTrue();
+                });
+
+        verify(checkProductInWishlistUseCase).execute(clientId, productId);
     }
 }

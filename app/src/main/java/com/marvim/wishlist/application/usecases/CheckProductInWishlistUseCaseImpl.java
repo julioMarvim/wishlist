@@ -1,20 +1,23 @@
 package com.marvim.wishlist.application.usecases;
 
 import com.marvim.wishlist.domain.entity.Wishlist;
-import com.marvim.wishlist.domain.ports.input.GetWishlistUseCase;
+import com.marvim.wishlist.domain.ports.input.CheckProductInWishlistUseCase;
 import com.marvim.wishlist.domain.ports.output.WishlistRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@Service
 @RequiredArgsConstructor
-public class GetWishlistUseCaseImpl implements GetWishlistUseCase {
+@Service
+public class CheckProductInWishlistUseCaseImpl implements CheckProductInWishlistUseCase {
 
     private final WishlistRepository wishlistRepository;
 
     @Override
-    public Wishlist execute(String clientId) {
+    public boolean execute(String clientId, String productId) {
         return wishlistRepository.findByClientId(clientId)
-                .orElseThrow(() -> new IllegalArgumentException("Wishlist not found for clientId: " + clientId));
+                .map(wishlist -> wishlist.getProducts().stream()
+                        .anyMatch(product -> product.getId().equals(productId)))
+                .orElse(false);
     }
+
 }

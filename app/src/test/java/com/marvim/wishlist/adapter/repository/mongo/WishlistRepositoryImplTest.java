@@ -12,11 +12,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 class WishlistRepositoryImplTest {
@@ -77,20 +76,24 @@ class WishlistRepositoryImplTest {
     void shouldFindWishlistByClientId() {
         when(springDataRepository.findByClientId(clientId)).thenReturn(Optional.of(wishlist));
 
-        Wishlist foundWishlist = wishlistRepository.findByClientId(clientId);
+        Optional<Wishlist> foundWishlistOptional = wishlistRepository.findByClientId(clientId);
 
+        assertTrue(foundWishlistOptional.isPresent());
+        Wishlist foundWishlist = foundWishlistOptional.get();
         assertEquals(clientId, foundWishlist.getClientId());
         assertEquals(1, foundWishlist.getProducts().size());
         assertEquals("1", foundWishlist.getProducts().get(0).getId());
     }
 
+
     @Test
-    void shouldReturnNullIfWishlistNotFound() {
+    void shouldReturnEmptyIfWishlistNotFound() {
         when(springDataRepository.findByClientId(clientId)).thenReturn(Optional.empty());
 
-        Wishlist foundWishlist = wishlistRepository.findByClientId(clientId);
+        Optional<Wishlist> foundWishlistOptional = wishlistRepository.findByClientId(clientId);
 
-        assertNull(foundWishlist);
+        assertFalse(foundWishlistOptional.isPresent());
     }
+
 
 }
