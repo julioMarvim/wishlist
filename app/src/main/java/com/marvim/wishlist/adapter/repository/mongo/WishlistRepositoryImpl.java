@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -43,6 +44,7 @@ public class WishlistRepositoryImpl implements WishlistRepository {
 
     @Override
     public Wishlist findByClientId(String clientId) {
-        return null;
+        Optional<Wishlist> wishlist = repository.findByClientId(clientId);
+        return wishlist.orElse(null);
     }
 }
