@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -50,7 +51,7 @@ public class GetWishlistUseCaseImplTest {
 
     @Test
     void shouldReturnWishlist() {
-        when(wishlistRepository.findByClientId("client-id")).thenReturn(wishlist);
+        when(wishlistRepository.findByClientId("client-id")).thenReturn(Optional.ofNullable(wishlist));
 
         Wishlist result = getWishlistUseCase.execute("client-id");
 

@@ -14,6 +14,7 @@ public class GetWishlistUseCaseImpl implements GetWishlistUseCase {
 
     @Override
     public Wishlist execute(String clientId) {
-        return wishlistRepository.findByClientId(clientId);
+        return wishlistRepository.findByClientId(clientId)
+                .orElseThrow(() -> new IllegalArgumentException("Wishlist not found for clientId: " + clientId));
     }
 }

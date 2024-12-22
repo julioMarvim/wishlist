@@ -43,8 +43,8 @@ public class WishlistRepositoryImpl implements WishlistRepository {
     }
 
     @Override
-    public Wishlist findByClientId(String clientId) {
-        Optional<Wishlist> wishlist = repository.findByClientId(clientId);
-        return wishlist.orElse(null);
+    public Optional<Wishlist> findByClientId(String clientId) {
+        return repository.findByClientId(clientId);
     }
+
 }
