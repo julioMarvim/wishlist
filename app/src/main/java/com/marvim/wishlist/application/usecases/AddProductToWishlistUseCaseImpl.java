@@ -2,7 +2,7 @@ package com.marvim.wishlist.application.usecases;
 
 import com.marvim.wishlist.domain.entity.Product;
 import com.marvim.wishlist.domain.ports.input.AddProductToWishlistUseCase;
-import com.marvim.wishlist.domain.ports.output.ProductRepository;
+import com.marvim.wishlist.domain.ports.output.WishlistRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AddProductToWishlistUseCaseImpl implements AddProductToWishlistUseCase {
 
-    private final ProductRepository productRepository;
+    private final WishlistRepository wishlistRepository ;
 
     @Override
     public void execute(String clientId, Product product) {
-        productRepository.save(product);
+        wishlistRepository.add(product);
     }
 }
