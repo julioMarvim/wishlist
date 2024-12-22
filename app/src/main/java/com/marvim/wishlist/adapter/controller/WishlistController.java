@@ -7,10 +7,7 @@ import com.marvim.wishlist.domain.ports.input.AddProductToWishlistUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,10 +16,10 @@ public class WishlistController {
 
     private final AddProductToWishlistUseCase addProductToWishlistUseCase;
 
-    @PostMapping
-    public ResponseEntity<Void> add(@RequestBody AddProductRequest request) {
+    @PostMapping("/{clientId}")
+    public ResponseEntity<Void> add( @PathVariable("clientId") String clientId, @RequestBody AddProductRequest request) {
         Product product = ProductMapper.toDomain(request);
-        addProductToWishlistUseCase.execute(product);
+        addProductToWishlistUseCase.execute(clientId, product);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

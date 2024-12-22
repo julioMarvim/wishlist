@@ -13,7 +13,7 @@ public class AddProductToWishlistUseCaseImpl implements AddProductToWishlistUseC
     private final ProductRepository productRepository;
 
     @Override
-    public void execute(Product product) {
+    public void execute(String clientId, Product product) {
         productRepository.save(product);
     }
 }

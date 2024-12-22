@@ -8,7 +8,6 @@ public class ProductMapper {
     public static Product toDomain(AddProductRequest request) {
         return Product.builder()
                 .id(request.getId())
-                .clientId(request.getClientId())
                 .name(request.getName())
                 .description(request.getDescription())
                 .price(request.getPrice())

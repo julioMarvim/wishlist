@@ -7,7 +7,6 @@ import lombok.Data;
 @Builder
 public class AddProductRequest {
     private String id;
-    private String clientId;
     private String name;
     private String description;
     private Double price;
