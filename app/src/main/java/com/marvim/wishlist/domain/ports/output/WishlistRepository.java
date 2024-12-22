@@ -4,4 +4,5 @@ import com.marvim.wishlist.domain.entity.Product;
 
 public interface WishlistRepository {
     void add(Product product);
+    void remove(String clientId, String productId);
 }

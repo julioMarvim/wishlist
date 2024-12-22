@@ -27,4 +27,9 @@ public class WishlistRepositoryImpl implements WishlistRepository {
         wishlist.getProducts().add(product);
         repository.save(wishlist);
     }
+
+    @Override
+    public void remove(String clientId, String productId) {
+
+    }
 }
