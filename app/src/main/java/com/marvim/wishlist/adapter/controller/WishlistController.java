@@ -1,9 +1,13 @@
 package com.marvim.wishlist.adapter.controller;
 
 import com.marvim.wishlist.adapter.controller.dto.request.AddProductRequest;
+import com.marvim.wishlist.adapter.controller.dto.response.WishlistResponse;
 import com.marvim.wishlist.application.mapper.ProductMapper;
+import com.marvim.wishlist.application.mapper.WishlistMapper;
 import com.marvim.wishlist.domain.entity.Product;
+import com.marvim.wishlist.domain.entity.Wishlist;
 import com.marvim.wishlist.domain.ports.input.AddProductToWishlistUseCase;
+import com.marvim.wishlist.domain.ports.input.GetWishlistUseCase;
 import com.marvim.wishlist.domain.ports.input.RemoveProductFromWishlistUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,6 +21,7 @@ public class WishlistController {
 
     private final AddProductToWishlistUseCase addProductToWishlistUseCase;
     private final RemoveProductFromWishlistUseCase removeProductFromWishlistUseCase;
+    private final GetWishlistUseCase getWishlistUseCase;
 
     @PostMapping("/{clientId}")
     public ResponseEntity<Void> add(@PathVariable("clientId") String clientId, @RequestBody AddProductRequest request) {
@@ -29,6 +34,13 @@ public class WishlistController {
     public ResponseEntity<Void> remove(@PathVariable("clientId") String clientId, @PathVariable("productId") String productId) {
         removeProductFromWishlistUseCase.execute(clientId, productId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{clientId}")
+    public ResponseEntity<WishlistResponse> getWishlist(@PathVariable("clientId") String clientId) {
+        Wishlist wishlist = getWishlistUseCase.execute(clientId);
+        WishlistResponse response = WishlistMapper.toResponse(wishlist);
+        return ResponseEntity.ok(response);
     }
 
 }

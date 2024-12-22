@@ -10,10 +10,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 class WishlistRepositoryImplTest {
@@ -59,7 +62,7 @@ class WishlistRepositoryImplTest {
 
     @Test
     void shouldRemoveProductFromWishlist() {
-        when(springDataRepository.findByClientId(clientId)).thenReturn(java.util.Optional.of(wishlist));
+        when(springDataRepository.findByClientId(clientId)).thenReturn(Optional.of(wishlist));
 
         wishlistRepository.remove(clientId, product.getId());
 
@@ -69,4 +72,25 @@ class WishlistRepositoryImplTest {
         List<Product> capturedProducts = wishlistCaptor.getValue().getProducts();
         assert !capturedProducts.contains(product);
     }
+
+    @Test
+    void shouldFindWishlistByClientId() {
+        when(springDataRepository.findByClientId(clientId)).thenReturn(Optional.of(wishlist));
+
+        Wishlist foundWishlist = wishlistRepository.findByClientId(clientId);
+
+        assertEquals(clientId, foundWishlist.getClientId());
+        assertEquals(1, foundWishlist.getProducts().size());
+        assertEquals("1", foundWishlist.getProducts().get(0).getId());
+    }
+
+    @Test
+    void shouldReturnNullIfWishlistNotFound() {
+        when(springDataRepository.findByClientId(clientId)).thenReturn(Optional.empty());
+
+        Wishlist foundWishlist = wishlistRepository.findByClientId(clientId);
+
+        assertNull(foundWishlist);
+    }
+
 }
