@@ -24,8 +24,7 @@ public class WishlistMapper {
                 .map(product -> new ProductResponse(
                         product.getId(),
                         product.getName(),
-                        product.getDescription(),
-                        product.getPrice()))
+                        product.getDescription()))
                 .collect(Collectors.toList());
     }
 }

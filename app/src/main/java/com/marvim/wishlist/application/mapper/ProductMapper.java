@@ -11,7 +11,6 @@ public class ProductMapper {
                 .id(request.getId())
                 .name(request.getName())
                 .description(request.getDescription())
-                .price(request.getPrice())
                 .build();
     }
 
@@ -20,7 +19,6 @@ public class ProductMapper {
                 .id(request.getId())
                 .name(request.getName())
                 .description(request.getDescription())
-                .price(request.getPrice())
                 .build();
     }
 }
