@@ -50,7 +50,7 @@ class WishlistRepositoryImplTest {
     void shouldAddProductToWishlist() {
         when(springDataRepository.save(wishlist)).thenReturn(wishlist);
 
-        wishlistRepository.add(product);
+        wishlistRepository.add(clientId, product);
 
         ArgumentCaptor<Wishlist> wishlistCaptor = ArgumentCaptor.forClass(Wishlist.class);
         verify(springDataRepository, times(1)).save(wishlistCaptor.capture());
@@ -85,7 +85,6 @@ class WishlistRepositoryImplTest {
         assertEquals("1", foundWishlist.getProducts().get(0).getId());
     }
 
-
     @Test
     void shouldReturnEmptyIfWishlistNotFound() {
         when(springDataRepository.findByClientId(clientId)).thenReturn(Optional.empty());
@@ -95,5 +94,30 @@ class WishlistRepositoryImplTest {
         assertFalse(foundWishlistOptional.isPresent());
     }
 
+    @Test
+    void shouldThrowExceptionIfWishlistHasMaxProducts() {
+        List<Product> twentyProducts =
+                java.util.stream.IntStream.range(0, 20)
+                        .mapToObj(i -> Product.builder()
+                                .id(String.valueOf(i))
+                                .name("Produto " + i)
+                                .description("Descrição " + i)
+                                .price(10d)
+                                .build())
+                        .collect(java.util.stream.Collectors.toList());
+
+        Wishlist fullWishlist = Wishlist.builder()
+                .clientId(clientId)
+                .products(twentyProducts)
+                .build();
+
+        when(springDataRepository.findByClientId(clientId)).thenReturn(Optional.of(fullWishlist));
+
+        IllegalStateException thrown = assertThrows(IllegalStateException.class, () -> {
+            wishlistRepository.add(clientId, product);
+        });
+
+        assertEquals("A wishlist já contém o número máximo de produtos.", thrown.getMessage());
+    }
 
 }
