@@ -27,7 +27,6 @@ class AddProductToWishlistUseCaseImplTest {
                 .id("product-id")
                 .name("Garrafa")
                 .description("Garrafa de café")
-                .price(30d)
                 .build();
 
         addProductToWishlistUseCase.execute(clientId, product);

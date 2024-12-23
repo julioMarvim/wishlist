@@ -33,14 +33,12 @@ public class GetWishlistUseCaseImplTest {
                 .id("product-id-1")
                 .name("Garrafa")
                 .description("Garrafa de café")
-                .price(30d)
                 .build();
 
         Product product2 = Product.builder()
                 .id("product-id-2")
                 .name("Caneca")
                 .description("Caneca térmica")
-                .price(20d)
                 .build();
 
         wishlist = Wishlist.builder()

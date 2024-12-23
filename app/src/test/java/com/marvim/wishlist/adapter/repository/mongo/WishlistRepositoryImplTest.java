@@ -35,7 +35,6 @@ class WishlistRepositoryImplTest {
                 .id("1")
                 .name("Garrafa")
                 .description("Garrafa de café")
-                .price(30d)
                 .build();
 
         wishlist = Wishlist.builder()
@@ -102,7 +101,6 @@ class WishlistRepositoryImplTest {
                                 .id(String.valueOf(i))
                                 .name("Produto " + i)
                                 .description("Descrição " + i)
-                                .price(10d)
                                 .build())
                         .collect(java.util.stream.Collectors.toList());
 
