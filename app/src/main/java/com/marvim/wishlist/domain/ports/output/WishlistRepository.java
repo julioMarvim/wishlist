@@ -6,7 +6,7 @@ import com.marvim.wishlist.domain.entity.Wishlist;
 import java.util.Optional;
 
 public interface WishlistRepository {
-    void add(String clientId, Product product);
+    void save(Wishlist wishlist);
     void remove(String clientId, String productId);
     Optional<Wishlist> findByClientId(String clientId);
 }

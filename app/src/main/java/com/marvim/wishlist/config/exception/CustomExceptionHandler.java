@@ -1,10 +1,13 @@
-package com.marvim.wishlist.config;
+package com.marvim.wishlist.config.exception;
 
+import com.marvim.wishlist.adapter.controller.dto.response.ApiResponse;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -27,9 +30,16 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
                 ))
                 .toList();
 
-        ApiErrorMessage apiErrorMessage = new ApiErrorMessage(status, errors);
+        ApiResponse<Void, List<FieldErrorMessage>> response = new ApiResponse<>(false, null, errors);
 
-        return new ResponseEntity<>(apiErrorMessage, status);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+
+    @ExceptionHandler(ProductAlreadyInWishlistException.class)
+    public ResponseEntity<ApiResponse<Void, String>> handleProductAlreadyInWishlistException(ProductAlreadyInWishlistException ex) {
+        ApiResponse<Void, String> response = new ApiResponse<>(false, null, ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
 }
