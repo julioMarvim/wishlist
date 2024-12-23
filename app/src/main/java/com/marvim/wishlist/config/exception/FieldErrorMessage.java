@@ -1,4 +1,4 @@
-package com.marvim.wishlist.config;
+package com.marvim.wishlist.config.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -18,19 +18,7 @@ public class WishlistRepositoryImpl implements WishlistRepository {
     private static final int MAX_PRODUCTS = 20;
 
     @Override
-    public void add(String clientId, Product product) {;
-
-        Wishlist wishlist = repository.findByClientId(clientId)
-                .orElseGet(() -> Wishlist.builder()
-                        .clientId(clientId)
-                        .products(new ArrayList<>())
-                        .build());
-
-        if (wishlist.getProducts().size() >= MAX_PRODUCTS) {
-            throw new IllegalStateException("A wishlist já contém o número máximo de produtos.");
-        }
-
-        wishlist.getProducts().add(product);
+    public void save(Wishlist wishlist) {
         repository.save(wishlist);
     }
 
