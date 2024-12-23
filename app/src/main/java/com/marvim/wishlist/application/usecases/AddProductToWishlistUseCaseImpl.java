@@ -1,19 +1,22 @@
 package com.marvim.wishlist.application.usecases;
 
 import com.marvim.wishlist.domain.entity.Product;
+import com.marvim.wishlist.domain.entity.Wishlist;
 import com.marvim.wishlist.domain.ports.input.AddProductToWishlistUseCase;
 import com.marvim.wishlist.domain.ports.output.WishlistRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class AddProductToWishlistUseCaseImpl implements AddProductToWishlistUseCase {
 
-    private final WishlistRepository wishlistRepository ;
+    private final WishlistRepository wishlistRepository;
 
     @Override
     public void execute(String clientId, Product product) {
-        wishlistRepository.add(product);
+        wishlistRepository.add(clientId, product);
     }
 }
