@@ -22,16 +22,15 @@ class AddProductToWishlistUseCaseImplTest {
 
     @Test
     void shouldSaveProductWhenExecutingUseCase() {
-        String clientId = "1";
+        String clientId = "client-id";
         Product product = Product.builder()
-                .id("1")
+                .id("product-id")
                 .name("Garrafa")
                 .description("Garrafa de café")
-                .price(30d)
                 .build();
 
         addProductToWishlistUseCase.execute(clientId, product);
 
-        verify(wishlistRepository, Mockito.times(1)).add(product);
+        verify(wishlistRepository, Mockito.times(1)).add(clientId, product);
     }
 }

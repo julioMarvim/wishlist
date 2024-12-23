@@ -10,9 +10,11 @@ import com.marvim.wishlist.domain.ports.input.AddProductToWishlistUseCase;
 import com.marvim.wishlist.domain.ports.input.CheckProductInWishlistUseCase;
 import com.marvim.wishlist.domain.ports.input.GetWishlistUseCase;
 import com.marvim.wishlist.domain.ports.input.RemoveProductFromWishlistUseCase;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,7 +29,7 @@ public class WishlistController {
 
     @PostMapping("/{clientId}")
     public ResponseEntity<Void> add(@PathVariable("clientId") String clientId,
-                                    @RequestBody AddProductRequest request) {
+                                    @Valid @RequestBody AddProductRequest request) {
         Product product = ProductMapper.toDomain(request);
         addProductToWishlistUseCase.execute(clientId, product);
         return ResponseEntity.status(HttpStatus.CREATED).build();

@@ -6,9 +6,9 @@ import com.marvim.wishlist.adapter.controller.dto.response.WishlistResponse;
 import com.marvim.wishlist.domain.entity.Product;
 import com.marvim.wishlist.domain.entity.Wishlist;
 import com.marvim.wishlist.domain.ports.input.AddProductToWishlistUseCase;
+import com.marvim.wishlist.domain.ports.input.CheckProductInWishlistUseCase;
 import com.marvim.wishlist.domain.ports.input.GetWishlistUseCase;
 import com.marvim.wishlist.domain.ports.input.RemoveProductFromWishlistUseCase;
-import com.marvim.wishlist.domain.ports.input.CheckProductInWishlistUseCase; // Novo UseCase
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,11 +22,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 public class WishlistControllerTest {
@@ -55,14 +55,12 @@ public class WishlistControllerTest {
                 .id("product-id-1")
                 .name("Garrafa")
                 .description("Garrafa de café")
-                .price(30d)
                 .build();
 
         Product product2 = Product.builder()
                 .id("product-id-2")
                 .name("Caneca")
                 .description("Caneca térmica")
-                .price(20d)
                 .build();
 
         wishlist = Wishlist.builder()
@@ -80,7 +78,6 @@ public class WishlistControllerTest {
                 .id("product-id")
                 .name("Garrafa")
                 .description("Garrafa de café")
-                .price(30d)
                 .build();
 
         mockMvc.perform(post("/wishlist/{clientId}", clientId)
