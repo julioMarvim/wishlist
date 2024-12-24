@@ -47,4 +47,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(WishlistNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(WishlistNotFoundException ex) {
+        List<ErrorResponse.ErrorDetail> errors = new ArrayList<>();
+        errors.add(new ErrorResponse.ErrorDetail(null, ex.getMessage()));
+        ErrorResponse errorResponse = new ErrorResponse("WISHLIST_NOT_FOUND_ERROR", errors);
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
 }
