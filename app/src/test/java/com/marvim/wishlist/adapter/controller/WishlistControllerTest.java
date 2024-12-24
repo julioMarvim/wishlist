@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marvim.wishlist.adapter.controller.dto.request.AddProductRequest;
 import com.marvim.wishlist.adapter.controller.dto.response.ApiResponse;
+import com.marvim.wishlist.adapter.controller.dto.response.CheckProductInWishlistResponse;
 import com.marvim.wishlist.adapter.controller.dto.response.WishlistResponse;
 import com.marvim.wishlist.domain.entity.Product;
 import com.marvim.wishlist.domain.entity.Wishlist;
@@ -116,7 +117,7 @@ public class WishlistControllerTest {
                     String content = result.getResponse().getContentAsString();
 
                     ApiResponse<WishlistResponse> response = new ObjectMapper()
-                            .readValue(content, new TypeReference<ApiResponse<WishlistResponse>>() {});
+                            .readValue(content, new TypeReference<>() {});
 
                     assertThat(response.getData().getProducts()).hasSize(2);
                     assertThat(response.getData().getProducts().get(0).getId()).isEqualTo("product-id-1");
@@ -131,6 +132,7 @@ public class WishlistControllerTest {
     void shouldCheckProductInWishlist() throws Exception {
         String clientId = "client-id";
         String productId = "product-id-1";
+
         when(checkProductInWishlistUseCase.execute(clientId, productId)).thenReturn(true);
 
         mockMvc.perform(get("/wishlist/{clientId}/{productId}/exists", clientId, productId)
@@ -138,8 +140,10 @@ public class WishlistControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(result -> {
                     String content = result.getResponse().getContentAsString();
-                    ApiResponse response = new ObjectMapper().readValue(content, ApiResponse.class);
-                    assertThat(Boolean.parseBoolean(response.getData().toString())).isTrue();
+                    ApiResponse<CheckProductInWishlistResponse> response = new ObjectMapper()
+                            .readValue(content, new TypeReference<>() {});
+
+                    assertThat(response.getData().getExists()).isTrue();
                 });
 
         verify(checkProductInWishlistUseCase).execute(clientId, productId);
