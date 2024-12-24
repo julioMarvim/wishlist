@@ -1,6 +1,7 @@
 package com.marvim.wishlist.adapter.controller;
 
 import com.marvim.wishlist.adapter.controller.dto.request.AddProductRequest;
+import com.marvim.wishlist.adapter.controller.dto.response.ApiResponse;
 import com.marvim.wishlist.adapter.controller.dto.response.WishlistResponse;
 import com.marvim.wishlist.application.mapper.ProductMapper;
 import com.marvim.wishlist.application.mapper.WishlistMapper;
@@ -14,7 +15,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,32 +28,31 @@ public class WishlistController {
     private final CheckProductInWishlistUseCase checkProductInWishlistUseCase;
 
     @PostMapping("/{clientId}")
-    public ResponseEntity<Void> add(@PathVariable("clientId") String clientId,
-                                    @Valid @RequestBody AddProductRequest request) {
+    public ResponseEntity<ApiResponse<Void>> add(@PathVariable("clientId") String clientId,
+                                                 @Valid @RequestBody AddProductRequest request) {
         Product product = ProductMapper.toDomain(request);
         addProductToWishlistUseCase.execute(clientId, product);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ApiResponse<>(null));
     }
 
     @DeleteMapping("/{clientId}/{productId}")
-    public ResponseEntity<Void> remove(@PathVariable("clientId") String clientId,
-                                       @PathVariable("productId") String productId) {
+    public ResponseEntity<ApiResponse<Void>> remove(@PathVariable("clientId") String clientId,
+                                                    @PathVariable("productId") String productId) {
         removeProductFromWishlistUseCase.execute(clientId, productId);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{clientId}")
-    public ResponseEntity<WishlistResponse> getWishlist(@PathVariable("clientId") String clientId) {
+    public ResponseEntity<ApiResponse<WishlistResponse>> getWishlist(@PathVariable("clientId") String clientId) {
         Wishlist wishlist = getWishlistUseCase.execute(clientId);
-        WishlistResponse response = WishlistMapper.toResponse(wishlist);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(new ApiResponse<>(WishlistMapper.toResponse(wishlist)));
     }
 
     @GetMapping("/{clientId}/{productId}/exists")
-    public ResponseEntity<Boolean> checkProductInWishlist(@PathVariable("clientId") String clientId,
-                                                          @PathVariable("productId") String productId) {
+    public ResponseEntity<ApiResponse<Boolean>> checkProductInWishlist(@PathVariable("clientId") String clientId,
+                                                                       @PathVariable("productId") String productId) {
         boolean exists = checkProductInWishlistUseCase.execute(clientId, productId);
-        return ResponseEntity.ok(exists);
+        return ResponseEntity.ok(new ApiResponse<>(exists));
     }
-
 }

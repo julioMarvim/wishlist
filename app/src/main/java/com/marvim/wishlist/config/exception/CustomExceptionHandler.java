@@ -5,12 +5,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @ControllerAdvice
@@ -20,26 +22,29 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex, HttpHeaders headers,
             HttpStatusCode status, WebRequest request) {
-
-        List<FieldErrorMessage> errors = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(fieldError -> new FieldErrorMessage(
-                        fieldError.getField(),
-                        fieldError.getDefaultMessage()
-                ))
-                .toList();
-
-        ApiResponse<Void, List<FieldErrorMessage>> response = new ApiResponse<>(false, null, errors);
-
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        List<ErrorResponse.ErrorDetail> errors = new ArrayList<>();
+        for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
+            errors.add(new ErrorResponse.ErrorDetail(fieldError.getField(), fieldError.getDefaultMessage()));
+        }
+        ErrorResponse errorResponse = new ErrorResponse("VALIDATION_FAILED", errors);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-
     @ExceptionHandler(ProductAlreadyInWishlistException.class)
-    public ResponseEntity<ApiResponse<Void, String>> handleProductAlreadyInWishlistException(ProductAlreadyInWishlistException ex) {
-        ApiResponse<Void, String> response = new ApiResponse<>(false, null, ex.getMessage());
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleProductAlreadyInWishlistException(ProductAlreadyInWishlistException ex) {
+        List<ErrorResponse.ErrorDetail> errors = new ArrayList<>();
+        errors.add(new ErrorResponse.ErrorDetail(null, ex.getMessage()));
+        ErrorResponse errorResponse = new ErrorResponse("PRODUCT_ALREADY_IN_WISHLIST", errors);
+        ApiResponse<ErrorResponse> apiResponse = new ApiResponse<>(errorResponse);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
+    }
+
+    @ExceptionHandler(WishlistLimitExceededException.class)
+    public ResponseEntity<ErrorResponse> handleWishlistLimitExceededException(WishlistLimitExceededException ex) {
+        List<ErrorResponse.ErrorDetail> errors = new ArrayList<>();
+        errors.add(new ErrorResponse.ErrorDetail(null, ex.getMessage()));
+        ErrorResponse errorResponse = new ErrorResponse("LIMIT_EXCEEDED", errors);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
 }

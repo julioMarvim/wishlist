@@ -1,6 +1,7 @@
 package com.marvim.wishlist.application.usecases;
 
 import com.marvim.wishlist.config.exception.ProductAlreadyInWishlistException;
+import com.marvim.wishlist.config.exception.WishlistLimitExceededException;
 import com.marvim.wishlist.domain.entity.Product;
 import com.marvim.wishlist.domain.entity.Wishlist;
 import com.marvim.wishlist.domain.ports.input.AddProductToWishlistUseCase;
@@ -27,7 +28,7 @@ public class AddProductToWishlistUseCaseImpl implements AddProductToWishlistUseC
                         .build());
 
         if (wishlist.getProducts().size() >= MAX_PRODUCTS) {
-            throw new IllegalStateException("A wishlist já contém o número máximo de produtos.");
+            throw new WishlistLimitExceededException(clientId);
         }
 
         if (wishlist.getProducts().stream()

@@ -1,6 +1,7 @@
 package com.marvim.wishlist.application.usecases;
 
 import com.marvim.wishlist.config.exception.ProductAlreadyInWishlistException;
+import com.marvim.wishlist.config.exception.WishlistLimitExceededException;
 import com.marvim.wishlist.domain.entity.Product;
 import com.marvim.wishlist.domain.entity.Wishlist;
 import com.marvim.wishlist.domain.ports.output.WishlistRepository;
@@ -81,11 +82,11 @@ class AddProductToWishlistUseCaseImplTest {
 
         when(wishlistRepository.findByClientId(clientId)).thenReturn(Optional.of(fullWishlist));
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () ->
+        WishlistLimitExceededException exception = assertThrows(WishlistLimitExceededException.class, () ->
                 addProductToWishlistUseCase.execute(clientId, newProduct)
         );
 
-        assertEquals("A wishlist já contém o número máximo de produtos.", exception.getMessage());
+        assertEquals("Customer ID client-id has exceeded the maximum number of products in the wishlist.", exception.getMessage());
         verify(wishlistRepository, never()).save(any());
     }
 
@@ -133,7 +134,7 @@ class AddProductToWishlistUseCaseImplTest {
                 addProductToWishlistUseCase.execute(clientId, existingProduct)
         );
 
-        assertEquals("Produto com ID product-id já está na wishlist do cliente: client-id", exception.getMessage());
+        assertEquals("Product with ID product-id is already in the customer id client-id wishlist", exception.getMessage());
         verify(wishlistRepository, never()).save(any());
     }
 
