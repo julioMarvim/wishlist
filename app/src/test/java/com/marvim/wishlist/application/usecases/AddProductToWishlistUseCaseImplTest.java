@@ -1,7 +1,7 @@
 package com.marvim.wishlist.application.usecases;
 
-import com.marvim.wishlist.config.exception.ProductAlreadyInWishlistException;
-import com.marvim.wishlist.config.exception.WishlistLimitExceededException;
+import com.marvim.wishlist.config.handler.exception.ProductAlreadyInWishlistException;
+import com.marvim.wishlist.config.handler.exception.WishlistLimitExceededException;
 import com.marvim.wishlist.domain.entity.Product;
 import com.marvim.wishlist.domain.entity.Wishlist;
 import com.marvim.wishlist.domain.ports.output.WishlistRepository;
@@ -29,7 +29,7 @@ class AddProductToWishlistUseCaseImplTest {
     private WishlistRepository wishlistRepository;
 
     @InjectMocks
-    private AddProductToWishlistUseCaseImpl addProductToWishlistUseCase;
+    private AddProductToWishlistUseCaseImpl useCase;
 
     @Test
     void shouldSaveProductWhenExecutingUseCase() {
@@ -48,7 +48,7 @@ class AddProductToWishlistUseCaseImplTest {
 
         when(wishlistRepository.findByClientId(clientId)).thenReturn(Optional.of(existingWishlist));
 
-        addProductToWishlistUseCase.execute(clientId, product);
+        useCase.execute(clientId, product);
 
         ArgumentCaptor<Wishlist> captor = ArgumentCaptor.forClass(Wishlist.class);
         verify(wishlistRepository).save(captor.capture());
@@ -83,7 +83,7 @@ class AddProductToWishlistUseCaseImplTest {
         when(wishlistRepository.findByClientId(clientId)).thenReturn(Optional.of(fullWishlist));
 
         WishlistLimitExceededException exception = assertThrows(WishlistLimitExceededException.class, () ->
-                addProductToWishlistUseCase.execute(clientId, newProduct)
+                useCase.execute(clientId, newProduct)
         );
 
         assertEquals("Customer ID client-id has exceeded the maximum number of products in the wishlist.", exception.getMessage());
@@ -102,7 +102,7 @@ class AddProductToWishlistUseCaseImplTest {
 
         when(wishlistRepository.findByClientId(clientId)).thenReturn(Optional.empty());
 
-        addProductToWishlistUseCase.execute(clientId, product);
+        useCase.execute(clientId, product);
 
         ArgumentCaptor<Wishlist> captor = ArgumentCaptor.forClass(Wishlist.class);
         verify(wishlistRepository).save(captor.capture());
@@ -131,7 +131,7 @@ class AddProductToWishlistUseCaseImplTest {
         when(wishlistRepository.findByClientId(clientId)).thenReturn(Optional.of(wishlist));
 
         ProductAlreadyInWishlistException exception = assertThrows(ProductAlreadyInWishlistException.class, () ->
-                addProductToWishlistUseCase.execute(clientId, existingProduct)
+                useCase.execute(clientId, existingProduct)
         );
 
         assertEquals("Product with ID product-id is already in the customer id client-id wishlist", exception.getMessage());

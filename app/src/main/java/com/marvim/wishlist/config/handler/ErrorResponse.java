@@ -1,4 +1,4 @@
-package com.marvim.wishlist.config.exception;
+package com.marvim.wishlist.config.handler;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

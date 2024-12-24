@@ -1,7 +1,7 @@
 package com.marvim.wishlist.application.usecases;
 
-import com.marvim.wishlist.config.exception.ProductAlreadyInWishlistException;
-import com.marvim.wishlist.config.exception.WishlistLimitExceededException;
+import com.marvim.wishlist.config.handler.exception.ProductAlreadyInWishlistException;
+import com.marvim.wishlist.config.handler.exception.WishlistLimitExceededException;
 import com.marvim.wishlist.domain.entity.Product;
 import com.marvim.wishlist.domain.entity.Wishlist;
 import com.marvim.wishlist.domain.ports.input.AddProductToWishlistUseCase;
@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
