@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: wishlist-db
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: wishlist
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    restart: always
+    networks:
+      - wishlist_network
+
+  wishlist-app:
+    build:
+      context: .
+    container_name: wishlist-app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/wishlist
+    depends_on:
+      - mongodb
+    networks:
+      - wishlist_network
+
+volumes:
+  mongodb_data:
+  mongodb_config:
+
+networks:
+  wishlist_network:
+    driver: bridge
