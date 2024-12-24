@@ -1,7 +1,9 @@
 package com.marvim.wishlist.adapter.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marvim.wishlist.adapter.controller.dto.request.AddProductRequest;
+import com.marvim.wishlist.adapter.controller.dto.response.ApiResponse;
 import com.marvim.wishlist.adapter.controller.dto.response.WishlistResponse;
 import com.marvim.wishlist.domain.entity.Product;
 import com.marvim.wishlist.domain.entity.Wishlist;
@@ -112,20 +114,23 @@ public class WishlistControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(result -> {
                     String content = result.getResponse().getContentAsString();
-                    WishlistResponse responseWishlist = new ObjectMapper().readValue(content, WishlistResponse.class);
-                    assertThat(responseWishlist.getProducts()).hasSize(2);
-                    assertThat(responseWishlist.getProducts().get(0).getId()).isEqualTo("product-id-1");
-                    assertThat(responseWishlist.getProducts().get(1).getId()).isEqualTo("product-id-2");
+
+                    ApiResponse<WishlistResponse> response = new ObjectMapper()
+                            .readValue(content, new TypeReference<ApiResponse<WishlistResponse>>() {});
+
+                    assertThat(response.getData().getProducts()).hasSize(2);
+                    assertThat(response.getData().getProducts().get(0).getId()).isEqualTo("product-id-1");
+                    assertThat(response.getData().getProducts().get(1).getId()).isEqualTo("product-id-2");
                 });
 
         verify(getWishlistUseCase).execute(clientId);
     }
 
+
     @Test
     void shouldCheckProductInWishlist() throws Exception {
         String clientId = "client-id";
         String productId = "product-id-1";
-
         when(checkProductInWishlistUseCase.execute(clientId, productId)).thenReturn(true);
 
         mockMvc.perform(get("/wishlist/{clientId}/{productId}/exists", clientId, productId)
@@ -133,9 +138,11 @@ public class WishlistControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(result -> {
                     String content = result.getResponse().getContentAsString();
-                    assertThat(Boolean.parseBoolean(content)).isTrue();
+                    ApiResponse response = new ObjectMapper().readValue(content, ApiResponse.class);
+                    assertThat(Boolean.parseBoolean(response.getData().toString())).isTrue();
                 });
 
         verify(checkProductInWishlistUseCase).execute(clientId, productId);
     }
+
 }
