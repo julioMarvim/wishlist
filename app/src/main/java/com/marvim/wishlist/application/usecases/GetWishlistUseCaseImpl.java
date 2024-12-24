@@ -1,6 +1,6 @@
 package com.marvim.wishlist.application.usecases;
 
-import com.marvim.wishlist.config.exception.WishlistNotFoundException;
+import com.marvim.wishlist.config.handler.exception.WishlistNotFoundException;
 import com.marvim.wishlist.domain.entity.Wishlist;
 import com.marvim.wishlist.domain.ports.input.GetWishlistUseCase;
 import com.marvim.wishlist.domain.ports.output.WishlistRepository;

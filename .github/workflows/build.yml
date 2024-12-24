@@ -36,6 +36,11 @@ jobs:
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag wishlist:$(date +%s)
 
-      - name: Dependency Check OWASP
+      - name: Snyk Security Test
+        uses: snyk/actions/setup@v1
+        with:
+          snyk-token: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Run Snyk Test
+        run: snyk test
         working-directory: ./app
-        run: mvn org.owasp:dependency-check-maven:aggregate

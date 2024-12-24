@@ -1,5 +1,6 @@
 package com.marvim.wishlist.adapter.repository.mongo;
 
+import com.marvim.wishlist.config.handler.exception.WishlistNotFoundException;
 import com.marvim.wishlist.domain.entity.Product;
 import com.marvim.wishlist.domain.entity.Wishlist;
 import com.marvim.wishlist.domain.ports.output.WishlistRepository;
@@ -23,9 +24,7 @@ public class WishlistRepositoryImpl implements WishlistRepository {
     }
 
     @Override
-    public void remove(String clientId, String productId) {
-        Wishlist wishlist = repository.findByClientId(clientId)
-                .orElseThrow(() -> new IllegalArgumentException("Wishlist not found"));
+    public void remove(Wishlist wishlist, String productId) {
 
         List<Product> mutableProducts = new ArrayList<>(wishlist.getProducts());
         mutableProducts.removeIf(product -> product.getId().equals(productId));

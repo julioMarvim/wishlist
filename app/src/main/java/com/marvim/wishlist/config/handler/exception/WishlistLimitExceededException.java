@@ -1,4 +1,4 @@
-package com.marvim.wishlist.config.exception;
+package com.marvim.wishlist.config.handler.exception;
 
 public class WishlistLimitExceededException extends RuntimeException {
     public WishlistLimitExceededException(String clientId) {

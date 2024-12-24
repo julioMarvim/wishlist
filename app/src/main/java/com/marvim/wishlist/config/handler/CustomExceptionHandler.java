@@ -1,6 +1,10 @@
-package com.marvim.wishlist.config.exception;
+package com.marvim.wishlist.config.handler;
 
 import com.marvim.wishlist.adapter.controller.dto.response.ApiResponse;
+import com.marvim.wishlist.config.handler.exception.ProductAlreadyInWishlistException;
+import com.marvim.wishlist.config.handler.exception.ProductNotFoundException;
+import com.marvim.wishlist.config.handler.exception.WishlistLimitExceededException;
+import com.marvim.wishlist.config.handler.exception.WishlistNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -48,10 +52,18 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(WishlistNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(WishlistNotFoundException ex) {
+    public ResponseEntity<ErrorResponse> handleWishlistNotFoundException(WishlistNotFoundException ex) {
         List<ErrorResponse.ErrorDetail> errors = new ArrayList<>();
         errors.add(new ErrorResponse.ErrorDetail(null, ex.getMessage()));
         ErrorResponse errorResponse = new ErrorResponse("WISHLIST_NOT_FOUND_ERROR", errors);
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleProductNotFoundException(ProductNotFoundException ex) {
+        List<ErrorResponse.ErrorDetail> errors = new ArrayList<>();
+        errors.add(new ErrorResponse.ErrorDetail(null, ex.getMessage()));
+        ErrorResponse errorResponse = new ErrorResponse("PRODUCT_NOT_FOUND_ERROR", errors);
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 

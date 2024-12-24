@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface WishlistRepository {
     void save(Wishlist wishlist);
-    void remove(String clientId, String productId);
+    void remove(Wishlist wishlist, String productId);
     Optional<Wishlist> findByClientId(String clientId);
 }
