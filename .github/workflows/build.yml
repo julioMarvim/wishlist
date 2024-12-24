@@ -1,6 +1,9 @@
 name: Build
 
-on: [push]
+on:
+  push:
+    branches:
+      - '*'
 
 jobs:
   build:
@@ -36,11 +39,7 @@ jobs:
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag wishlist:$(date +%s)
 
-      - name: Snyk Security Test
-        uses: snyk/actions/setup@v1
-        with:
-          snyk-token: ${{ secrets.SNYK_TOKEN }}
-
-      - name: Run Snyk Test
-        run: snyk test
+      - name: Dependency Check OWASP
+        if: github.ref == 'refs/heads/main'
         working-directory: ./app
+        run: mvn org.owasp:dependency-check-maven:aggregate
