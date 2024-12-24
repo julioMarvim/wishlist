@@ -60,9 +60,7 @@ class WishlistRepositoryImplTest {
 
     @Test
     void shouldRemoveProductFromWishlist() {
-        when(springDataRepository.findByClientId(clientId)).thenReturn(Optional.of(wishlist));
-
-        wishlistRepository.remove(clientId, product.getId());
+        wishlistRepository.remove(wishlist, product.getId());
 
         ArgumentCaptor<Wishlist> wishlistCaptor = ArgumentCaptor.forClass(Wishlist.class);
         verify(springDataRepository, times(1)).save(wishlistCaptor.capture());

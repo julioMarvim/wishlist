@@ -21,7 +21,7 @@ class CheckProductInWishlistUseCaseImplTest {
     private WishlistRepository wishlistRepository;
 
     @InjectMocks
-    private CheckProductInWishlistUseCaseImpl checkProductInWishlistUseCase;
+    private CheckProductInWishlistUseCaseImpl useCase;
 
     private Wishlist wishlist;
 
@@ -54,7 +54,7 @@ class CheckProductInWishlistUseCaseImplTest {
 
         when(wishlistRepository.findByClientId(clientId)).thenReturn(Optional.of(wishlist));
 
-        boolean result = checkProductInWishlistUseCase.execute(clientId, productId);
+        boolean result = useCase.execute(clientId, productId);
 
         assertThat(result).isTrue();
     }
@@ -66,7 +66,7 @@ class CheckProductInWishlistUseCaseImplTest {
 
         when(wishlistRepository.findByClientId(clientId)).thenReturn(Optional.of(wishlist));
 
-        boolean result = checkProductInWishlistUseCase.execute(clientId, productId);
+        boolean result = useCase.execute(clientId, productId);
 
         assertThat(result).isFalse();
     }
