@@ -1,5 +1,7 @@
 package com.marvim.wishlist.application.usecases;
 
+import com.marvim.wishlist.config.handler.exception.ProductNotFoundException;
+import com.marvim.wishlist.config.handler.exception.WishlistNotFoundException;
 import com.marvim.wishlist.domain.entity.Product;
 import com.marvim.wishlist.domain.entity.Wishlist;
 import com.marvim.wishlist.domain.ports.output.WishlistRepository;
@@ -9,11 +11,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 class CheckProductInWishlistUseCaseImplTest {
 
@@ -54,9 +59,8 @@ class CheckProductInWishlistUseCaseImplTest {
 
         when(wishlistRepository.findByClientId(clientId)).thenReturn(Optional.of(wishlist));
 
-        boolean result = useCase.execute(clientId, productId);
-
-        assertThat(result).isTrue();
+        useCase.execute(clientId, productId);
+        verify(wishlistRepository).findByClientId(clientId);
     }
 
     @Test
@@ -64,10 +68,40 @@ class CheckProductInWishlistUseCaseImplTest {
         String clientId = "client-id";
         String productId = "non-existing-product-id";
 
+        Product existingProduct = Product.builder()
+                .id("product-id")
+                .name("Garrafa")
+                .description("Garrafa de café")
+                .build();
+
+        Wishlist wishlist = Wishlist.builder()
+                .id("wishlist-1")
+                .clientId(clientId)
+                .products(new ArrayList<>(List.of(existingProduct)))
+                .build();
+
         when(wishlistRepository.findByClientId(clientId)).thenReturn(Optional.of(wishlist));
 
-        boolean result = useCase.execute(clientId, productId);
+        ProductNotFoundException exception = assertThrows(ProductNotFoundException.class,() ->
+                useCase.execute(clientId, productId)
+        );
 
-        assertThat(result).isFalse();
+        assertEquals("Product non-existing-product-id not found in customer wishlist with id: client-id", exception.getMessage());
+        verify(wishlistRepository, times(1)).findByClientId(clientId);
+    }
+
+    @Test
+    void shouldThrowWishlistNotFoundExceptionWhenWishlistNotFound() {
+        String clientId = "non-existent-client-id";
+        String productId = "product-id";
+
+        when(wishlistRepository.findByClientId(clientId)).thenReturn(Optional.empty());
+
+        WishlistNotFoundException exception = assertThrows(WishlistNotFoundException.class,() ->
+                useCase.execute(clientId, productId)
+        );
+
+        assertEquals("Wishlist not found for cilent: non-existent-client-id", exception.getMessage());
+        verify(wishlistRepository, times(1)).findByClientId(clientId);
     }
 }

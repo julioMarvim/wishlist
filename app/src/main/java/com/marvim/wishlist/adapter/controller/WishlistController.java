@@ -63,8 +63,8 @@ public class WishlistController {
     public ResponseEntity<ApiResponse<CheckProductInWishlistResponse>> checkProductInWishlist(@PathVariable("clientId") String clientId,
                                                                                               @PathVariable("productId") String productId) {
         logger.info("Received request to check if product with ID: {} exists in client {}'s wishlist", productId, clientId);
-        boolean exists = checkProductInWishlistUseCase.execute(clientId, productId);
-        logger.info("Product with ID: {} {} in client {}'s wishlist", productId, exists ? "exists" : "does not exist", clientId);
-        return ResponseEntity.ok(new ApiResponse<>(CheckProductInWishlistResponse.builder().exists(exists).build()));
+        checkProductInWishlistUseCase.execute(clientId, productId);
+        logger.info("Success in checking if the product with ID; {} exists in to the wish list for the customer with ID: {}",productId, clientId);
+        return ResponseEntity.ok().build();
     }
 }

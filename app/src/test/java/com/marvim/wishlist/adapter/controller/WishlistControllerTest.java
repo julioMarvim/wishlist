@@ -6,6 +6,8 @@ import com.marvim.wishlist.adapter.controller.dto.request.AddProductRequest;
 import com.marvim.wishlist.adapter.controller.dto.response.ApiResponse;
 import com.marvim.wishlist.adapter.controller.dto.response.CheckProductInWishlistResponse;
 import com.marvim.wishlist.adapter.controller.dto.response.WishlistResponse;
+import com.marvim.wishlist.config.handler.ErrorResponse;
+import com.marvim.wishlist.config.handler.exception.ProductNotFoundException;
 import com.marvim.wishlist.domain.entity.Product;
 import com.marvim.wishlist.domain.entity.Wishlist;
 import com.marvim.wishlist.domain.ports.input.AddProductToWishlistUseCase;
@@ -127,26 +129,21 @@ public class WishlistControllerTest {
         verify(getWishlistUseCase).execute(clientId);
     }
 
-
     @Test
     void shouldCheckProductInWishlist() throws Exception {
         String clientId = "client-id";
         String productId = "product-id-1";
 
-        when(checkProductInWishlistUseCase.execute(clientId, productId)).thenReturn(true);
+        doNothing().when(checkProductInWishlistUseCase).execute(clientId, productId);
 
         mockMvc.perform(get("/wishlist/{clientId}/{productId}/exists", clientId, productId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(result -> {
                     String content = result.getResponse().getContentAsString();
-                    ApiResponse<CheckProductInWishlistResponse> response = new ObjectMapper()
-                            .readValue(content, new TypeReference<>() {});
-
-                    assertThat(response.getData().getExists()).isTrue();
+                    assertThat(content).isEmpty();
                 });
 
         verify(checkProductInWishlistUseCase).execute(clientId, productId);
     }
-
 }
