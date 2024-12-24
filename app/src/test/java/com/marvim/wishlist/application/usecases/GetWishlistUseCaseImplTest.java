@@ -1,5 +1,6 @@
 package com.marvim.wishlist.application.usecases;
 
+import com.marvim.wishlist.config.exception.WishlistNotFoundException;
 import com.marvim.wishlist.domain.entity.Product;
 import com.marvim.wishlist.domain.entity.Wishlist;
 import com.marvim.wishlist.domain.ports.output.WishlistRepository;
@@ -61,4 +62,19 @@ public class GetWishlistUseCaseImplTest {
 
         verify(wishlistRepository, times(1)).findByClientId("client-id");
     }
+
+    @Test
+    void shouldThrowWishlistNotFoundExceptionWhenWishlistNotFound() {
+        String clientId = "non-existent-client-id";
+
+        when(wishlistRepository.findByClientId(clientId)).thenReturn(Optional.empty());
+
+        WishlistNotFoundException exception = assertThrows(WishlistNotFoundException.class,() ->
+                getWishlistUseCase.execute(clientId)
+        );
+
+        assertEquals("Wishlist not found for cilent: non-existent-client-id", exception.getMessage());
+        verify(wishlistRepository, times(1)).findByClientId(clientId);
+    }
+
 }
