@@ -2,6 +2,7 @@ package com.marvim.wishlist.adapter.controller;
 
 import com.marvim.wishlist.adapter.controller.dto.request.AddProductRequest;
 import com.marvim.wishlist.adapter.controller.dto.response.ApiResponse;
+import com.marvim.wishlist.adapter.controller.dto.response.CheckProductInWishlistResponse;
 import com.marvim.wishlist.adapter.controller.dto.response.WishlistResponse;
 import com.marvim.wishlist.application.mapper.ProductMapper;
 import com.marvim.wishlist.application.mapper.WishlistMapper;
@@ -28,12 +29,11 @@ public class WishlistController {
     private final CheckProductInWishlistUseCase checkProductInWishlistUseCase;
 
     @PostMapping("/{clientId}")
-    public ResponseEntity<ApiResponse<Void>> add(@PathVariable("clientId") String clientId,
+    public ResponseEntity<Void> add(@PathVariable("clientId") String clientId,
                                                  @Valid @RequestBody AddProductRequest request) {
         Product product = ProductMapper.toDomain(request);
         addProductToWishlistUseCase.execute(clientId, product);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ApiResponse<>(null));
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping("/{clientId}/{productId}")
@@ -50,9 +50,10 @@ public class WishlistController {
     }
 
     @GetMapping("/{clientId}/{productId}/exists")
-    public ResponseEntity<ApiResponse<Boolean>> checkProductInWishlist(@PathVariable("clientId") String clientId,
-                                                                       @PathVariable("productId") String productId) {
-        boolean exists = checkProductInWishlistUseCase.execute(clientId, productId);
-        return ResponseEntity.ok(new ApiResponse<>(exists));
+    public ResponseEntity<ApiResponse<CheckProductInWishlistResponse>> checkProductInWishlist(@PathVariable("clientId") String clientId,
+                                                                                              @PathVariable("productId") String productId) {
+        return ResponseEntity.ok(new ApiResponse<>(CheckProductInWishlistResponse.builder().exists(
+                checkProductInWishlistUseCase.execute(clientId, productId)
+        ).build()));
     }
 }
