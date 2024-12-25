@@ -18,18 +18,10 @@ public class AddProductToWishlistUseCaseImpl implements AddProductToWishlistUseC
     private static final Logger logger = LoggerFactory.getLogger(AddProductToWishlistUseCaseImpl.class);
 
     private final WishlistRepository wishlistRepository;
-    private final WishlistValidationService wishlistValidationService;
 
     @Override
     public void execute(String clientId, Product product) {
         logger.info("Starting operation to add product with ID: {} to wishlist for client with ID: {}", product.getId(), clientId);
-
-        Wishlist wishlist = wishlistRepository.findByClientId(clientId)
-                .orElseGet(() -> WishlistFactory.createNew(clientId));
-
-        wishlistValidationService.validateWishlistLimit(wishlist);
-        wishlist.addProduct(product);
-
-        wishlistRepository.save(wishlist);
+        wishlistRepository.save(clientId, product);
     }
 }

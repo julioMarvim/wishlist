@@ -1,8 +1,11 @@
 package com.marvim.wishlist.adapter.repository.mongo;
 
+import com.marvim.wishlist.config.handler.exception.ProductAlreadyInWishlistException;
+import com.marvim.wishlist.config.handler.exception.WishlistLimitExceededException;
 import com.marvim.wishlist.config.handler.exception.WishlistNotFoundException;
 import com.marvim.wishlist.domain.entity.Product;
 import com.marvim.wishlist.domain.entity.Wishlist;
+import com.marvim.wishlist.domain.entity.WishlistFactory;
 import com.marvim.wishlist.domain.ports.output.WishlistRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -20,10 +23,15 @@ public class WishlistRepositoryImpl implements WishlistRepository {
     private static final Logger logger = LoggerFactory.getLogger(WishlistRepositoryImpl.class);
 
     private final SpringDataWishlistRepository repository;
+    private static final int MAX_PRODUCTS = 20;
 
     @Override
-    public void save(Wishlist wishlist) {
-        logger.info("Starting database operation to save wishlist for client with ID: {}", wishlist.getClientId());
+    public void save(String clientId, Product product) {
+        logger.info("Starting database operation to save wishlist for client with ID: {}", clientId);
+        Wishlist wishlist = getOrCreateWishlist(clientId);
+        validateWishlistLimit(wishlist);
+        validateProductNotInWishlist(wishlist, product);
+        wishlist.addProduct(product);
         repository.save(wishlist);
         logger.info("Wishlist with ID: {} successfully updated in database for customer with ID: {}", wishlist.getId(), wishlist.getClientId());
     }
@@ -54,5 +62,26 @@ public class WishlistRepositoryImpl implements WishlistRepository {
         }
 
         return wishlist;
+    }
+
+    private Wishlist getOrCreateWishlist(String clientId) {
+        return repository.findByClientId(clientId)
+                .orElseGet(() -> WishlistFactory.createNew(clientId));
+    }
+
+    private void validateWishlistLimit(Wishlist wishlist) {
+        if (wishlist.getProducts().size() >= MAX_PRODUCTS) {
+            logger.error("Wishlist for client with ID: {} exceeds the limit of {} products", wishlist.getClientId(), MAX_PRODUCTS);
+            throw new WishlistLimitExceededException(wishlist.getClientId());
+        }
+    }
+
+    private void validateProductNotInWishlist(Wishlist wishlist, Product product) {
+        boolean exists = wishlist.getProducts().stream()
+                .anyMatch(p -> p.getId().equals(product.getId()));
+        if (exists) {
+            logger.error("Product with ID: {} already exists in wishlist for client with ID: {}", product.getId(), wishlist.getClientId());
+            throw new ProductAlreadyInWishlistException(wishlist.getClientId(), product.getId());
+        }
     }
 }
