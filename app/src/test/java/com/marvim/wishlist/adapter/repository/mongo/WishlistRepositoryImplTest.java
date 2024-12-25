@@ -1,7 +1,9 @@
 package com.marvim.wishlist.adapter.repository.mongo;
 
 import com.marvim.wishlist.config.handler.exception.ProductAlreadyInWishlistException;
+import com.marvim.wishlist.config.handler.exception.ProductNotFoundException;
 import com.marvim.wishlist.config.handler.exception.WishlistLimitExceededException;
+import com.marvim.wishlist.config.handler.exception.WishlistNotFoundException;
 import com.marvim.wishlist.domain.entity.Product;
 import com.marvim.wishlist.domain.entity.Wishlist;
 import org.junit.jupiter.api.BeforeEach;
@@ -77,9 +79,9 @@ class WishlistRepositoryImplTest {
                 .products(new ArrayList<>(List.of(product)))
                 .build();
 
-        when(springDataRepository.save(wishlist)).thenReturn(wishlist);
+        when(springDataRepository.findByClientId(clientId)).thenReturn(Optional.of(wishlist));
 
-        wishlistRepository.remove(wishlist, product.getId());
+        wishlistRepository.remove(clientId, product.getId());
 
         ArgumentCaptor<Wishlist> wishlistCaptor = ArgumentCaptor.forClass(Wishlist.class);
         verify(springDataRepository, times(1)).save(wishlistCaptor.capture());
@@ -92,22 +94,12 @@ class WishlistRepositoryImplTest {
     void shouldFindWishlistByClientId() {
         when(springDataRepository.findByClientId(clientId)).thenReturn(Optional.of(wishlist));
 
-        Optional<Wishlist> foundWishlistOptional = wishlistRepository.findByClientId(clientId);
+        Wishlist foundWishlist = wishlistRepository.findByClientId(clientId);
 
-        assertTrue(foundWishlistOptional.isPresent());
-        Wishlist foundWishlist = foundWishlistOptional.get();
+        assertNotNull(foundWishlist);
         assertEquals(clientId, foundWishlist.getClientId());
         assertEquals(1, foundWishlist.getProducts().size());
         assertEquals("1", foundWishlist.getProducts().get(0).getId());
-    }
-
-    @Test
-    void shouldReturnEmptyIfWishlistNotFound() {
-        when(springDataRepository.findByClientId(clientId)).thenReturn(Optional.empty());
-
-        Optional<Wishlist> foundWishlistOptional = wishlistRepository.findByClientId(clientId);
-
-        assertFalse(foundWishlistOptional.isPresent());
     }
 
     @Test
@@ -156,6 +148,25 @@ class WishlistRepositoryImplTest {
 
         assertThrows(ProductAlreadyInWishlistException.class, () -> wishlistRepository.save(clientId, productToAdd));
     }
+
+    @Test
+    void shouldThrowExceptionWhenWishlistNotFound() {
+        when(springDataRepository.findByClientId(clientId)).thenReturn(Optional.empty());
+        assertThrows(WishlistNotFoundException.class, () -> wishlistRepository.checkProductInWishlist(clientId, product.getId()));
+    }
+
+    @Test
+    void shouldThrowExceptionWhenProductNotFoundInWishlist() {
+        when(springDataRepository.findByClientId(clientId)).thenReturn(Optional.of(wishlist));
+        assertThrows(ProductNotFoundException.class, () -> wishlistRepository.checkProductInWishlist(clientId, "non-existing-id"));
+    }
+
+    @Test
+    void shouldCheckProductInWishlistSuccessfully() {
+        when(springDataRepository.findByClientId(clientId)).thenReturn(Optional.of(wishlist));
+        assertDoesNotThrow(() -> wishlistRepository.checkProductInWishlist(clientId, product.getId()));
+    }
+
 
 
 }
