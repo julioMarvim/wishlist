@@ -3,10 +3,9 @@ package com.marvim.wishlist.domain.ports.output;
 import com.marvim.wishlist.domain.entity.Product;
 import com.marvim.wishlist.domain.entity.Wishlist;
 
-import java.util.Optional;
-
 public interface WishlistRepository {
-    void save(Wishlist wishlist);
-    void remove(Wishlist wishlist, String productId);
-    Optional<Wishlist> findByClientId(String clientId);
+    void save(String clientId, Product product);
+    void remove(String clientId, String productId);
+    void checkProductInWishlist(String clientId, String productId);
+    Wishlist findByClientId(String clientId);
 }
