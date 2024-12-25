@@ -5,6 +5,7 @@ import com.marvim.wishlist.config.handler.exception.WishlistLimitExceededExcepti
 import com.marvim.wishlist.domain.entity.Product;
 import com.marvim.wishlist.domain.entity.Wishlist;
 import com.marvim.wishlist.domain.ports.output.WishlistRepository;
+import com.marvim.wishlist.domain.service.WishlistValidationService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -27,6 +28,9 @@ class AddProductToWishlistUseCaseImplTest {
 
     @Mock
     private WishlistRepository wishlistRepository;
+
+    @Mock
+    private WishlistValidationService wishlistValidationService;
 
     @InjectMocks
     private AddProductToWishlistUseCaseImpl useCase;
@@ -81,6 +85,8 @@ class AddProductToWishlistUseCaseImplTest {
                 .build();
 
         when(wishlistRepository.findByClientId(clientId)).thenReturn(Optional.of(fullWishlist));
+        doThrow(new WishlistLimitExceededException(clientId))
+                .when(wishlistValidationService).validateWishlistLimit(any());
 
         WishlistLimitExceededException exception = assertThrows(WishlistLimitExceededException.class, () ->
                 useCase.execute(clientId, newProduct)
@@ -89,6 +95,7 @@ class AddProductToWishlistUseCaseImplTest {
         assertEquals("Customer ID client-id has exceeded the maximum number of products in the wishlist.", exception.getMessage());
         verify(wishlistRepository, never()).save(any());
     }
+
 
     @Test
     void shouldCreateNewWishlistIfNoneExists() {
@@ -129,13 +136,15 @@ class AddProductToWishlistUseCaseImplTest {
                 .build();
 
         when(wishlistRepository.findByClientId(clientId)).thenReturn(Optional.of(wishlist));
+        doThrow(new ProductAlreadyInWishlistException(clientId, existingProduct.getId()))
+                .when(wishlistValidationService).validateWishlistLimit(any());
 
         ProductAlreadyInWishlistException exception = assertThrows(ProductAlreadyInWishlistException.class, () ->
                 useCase.execute(clientId, existingProduct)
         );
 
-        assertEquals("Product with ID product-id is already in the customer id client-id wishlist", exception.getMessage());
+        assertEquals("Product with ID product-id is already in the customer id client-id wishlist.", exception.getMessage());
         verify(wishlistRepository, never()).save(any());
     }
-
 }
+
