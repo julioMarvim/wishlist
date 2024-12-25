@@ -1,11 +1,8 @@
 package com.marvim.wishlist.application.usecases;
 
 import com.marvim.wishlist.domain.entity.Product;
-import com.marvim.wishlist.domain.entity.Wishlist;
-import com.marvim.wishlist.domain.entity.WishlistFactory;
 import com.marvim.wishlist.domain.ports.input.AddProductToWishlistUseCase;
 import com.marvim.wishlist.domain.ports.output.WishlistRepository;
-import com.marvim.wishlist.domain.service.WishlistValidationService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
