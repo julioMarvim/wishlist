@@ -4,6 +4,7 @@ import com.marvim.wishlist.config.handler.exception.ProductAlreadyInWishlistExce
 import com.marvim.wishlist.config.handler.exception.WishlistLimitExceededException;
 import com.marvim.wishlist.domain.entity.Product;
 import com.marvim.wishlist.domain.entity.Wishlist;
+import com.marvim.wishlist.domain.entity.WishlistFactory;
 import com.marvim.wishlist.domain.ports.output.WishlistRepository;
 import com.marvim.wishlist.domain.service.WishlistValidationService;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -129,15 +129,10 @@ class AddProductToWishlistUseCaseImplTest {
                 .description("Garrafa de café")
                 .build();
 
-        Wishlist wishlist = Wishlist.builder()
-                .id("wishlist-1")
-                .clientId(clientId)
-                .products(new ArrayList<>(List.of(existingProduct)))
-                .build();
+        Wishlist wishlist = WishlistFactory.createNew(clientId);
+        wishlist.addProduct(existingProduct);
 
         when(wishlistRepository.findByClientId(clientId)).thenReturn(Optional.of(wishlist));
-        doThrow(new ProductAlreadyInWishlistException(clientId, existingProduct.getId()))
-                .when(wishlistValidationService).validateWishlistLimit(any());
 
         ProductAlreadyInWishlistException exception = assertThrows(ProductAlreadyInWishlistException.class, () ->
                 useCase.execute(clientId, existingProduct)

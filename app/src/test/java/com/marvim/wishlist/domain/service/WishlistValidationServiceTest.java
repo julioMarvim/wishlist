@@ -1,6 +1,5 @@
 package com.marvim.wishlist.domain.service;
 
-import com.marvim.wishlist.config.handler.exception.ProductAlreadyInWishlistException;
 import com.marvim.wishlist.config.handler.exception.WishlistLimitExceededException;
 import com.marvim.wishlist.domain.entity.Product;
 import com.marvim.wishlist.domain.entity.Wishlist;
@@ -55,33 +54,5 @@ class WishlistValidationServiceTest {
                 .build();
 
         assertDoesNotThrow(() -> wishlistValidationService.validateWishlistLimit(wishlist));
-    }
-
-    @Test
-    void shouldThrowExceptionIfProductAlreadyInWishlist() {
-        String clientId = "client-id";
-        Product product = Product.builder().id("product-id").build();
-        Wishlist wishlist = Wishlist.builder()
-                .clientId(clientId)
-                .products(new ArrayList<>(List.of(product)))
-                .build();
-
-        ProductAlreadyInWishlistException exception = assertThrows(ProductAlreadyInWishlistException.class, () ->
-                wishlistValidationService.validateProductNotInWishlist(wishlist, product)
-        );
-
-        assertEquals("Product with ID product-id is already in the customer id client-id wishlist.", exception.getMessage());
-    }
-
-    @Test
-    void shouldNotThrowExceptionIfProductNotInWishlist() {
-        String clientId = "client-id";
-        Product product = Product.builder().id("product-id").build();
-        Wishlist wishlist = Wishlist.builder()
-                .clientId(clientId)
-                .products(new ArrayList<>())
-                .build();
-
-        assertDoesNotThrow(() -> wishlistValidationService.validateProductNotInWishlist(wishlist, product));
     }
 }
