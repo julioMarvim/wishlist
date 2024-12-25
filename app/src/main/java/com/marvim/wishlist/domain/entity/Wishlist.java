@@ -27,10 +27,12 @@ public class Wishlist {
         products.add(product);
     }
 
-    public void removeProduct(Product product) {
-        if (!products.contains(product)) {
-            throw new ProductNotFoundException(this.getClientId(), product.getId());
-        }
-        products.remove(product);
+    public void removeProduct(String productId) {
+        Product productToRemove = products.stream()
+                .filter(product -> product.getId().equals(productId))
+                .findFirst()
+                .orElseThrow(() -> new ProductNotFoundException(this.getClientId(), productId));
+
+        products.remove(productToRemove);
     }
 }
