@@ -8,5 +8,5 @@ RUN mvn clean install -DskipTests
 
 FROM openjdk:17-slim
 WORKDIR /app
-COPY --from=build /app/target/wishlistEntity-0.0.1-SNAPSHOT.jar /app/wishlistEntity.jar
-CMD ["java", "-jar", "/app/wishlistEntity.jar"]
+COPY --from=build /app/target/wishlist-0.0.1-SNAPSHOT.jar /app/wishlist.jar
+CMD ["java", "-jar", "/app/wishlist.jar"]

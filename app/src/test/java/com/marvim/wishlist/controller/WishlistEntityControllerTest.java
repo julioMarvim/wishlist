@@ -2,15 +2,11 @@ package com.marvim.wishlist.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.marvim.wishlist.controller.WishlistController;
 import com.marvim.wishlist.controller.dto.request.AddProductRequest;
-import com.marvim.wishlist.controller.dto.response.ApiResponse;
-import com.marvim.wishlist.controller.dto.response.ProductResponse;
-import com.marvim.wishlist.controller.dto.response.WishlistResponse;
+import com.marvim.wishlist.controller.dto.response.ApiResponseDto;
+import com.marvim.wishlist.controller.dto.response.WishlistResponseDto;
 import com.marvim.wishlist.input.dto.response.ProductResponseInputDto;
 import com.marvim.wishlist.input.dto.response.WishlistResponseInputDto;
-import com.marvim.wishlist.repository.entity.ProductEntity;
-import com.marvim.wishlist.repository.entity.WishlistEntity;
 import com.marvim.wishlist.input.AddProductToWishlistUseCase;
 import com.marvim.wishlist.input.CheckProductInWishlistUseCase;
 import com.marvim.wishlist.input.GetWishlistUseCase;
@@ -87,7 +83,7 @@ public class WishlistEntityControllerTest {
                 .description("Garrafa de café")
                 .build();
 
-        mockMvc.perform(post("/wishlist/{clientId}", clientId)
+        mockMvc.perform(post("/api/v1/wishlist/{clientId}", clientId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(status().isCreated());
@@ -101,7 +97,7 @@ public class WishlistEntityControllerTest {
         String clientId = "client-id";
         String productId = "product-id";
 
-        mockMvc.perform(delete("/wishlist/{clientId}/{productId}", clientId, productId)
+        mockMvc.perform(delete("/api/v1/wishlist/{clientId}/{productId}", clientId, productId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
@@ -114,13 +110,13 @@ public class WishlistEntityControllerTest {
 
         when(getWishlistUseCase.execute(clientId)).thenReturn(wishlistResponse);
 
-        mockMvc.perform(get("/wishlist/{clientId}", clientId)
+        mockMvc.perform(get("/api/v1/wishlist/{clientId}", clientId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(result -> {
                     String content = result.getResponse().getContentAsString();
 
-                    ApiResponse<WishlistResponse> response = new ObjectMapper()
+                    ApiResponseDto<WishlistResponseDto> response = new ObjectMapper()
                             .readValue(content, new TypeReference<>() {});
 
                     assertThat(response.getData().getProducts()).hasSize(2);
@@ -138,7 +134,7 @@ public class WishlistEntityControllerTest {
 
         doNothing().when(checkProductInWishlistUseCase).execute(clientId, productId);
 
-        mockMvc.perform(get("/wishlist/{clientId}/{productId}/exists", clientId, productId)
+        mockMvc.perform(get("/api/v1/wishlist/{clientId}/{productId}/exists", clientId, productId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(result -> {

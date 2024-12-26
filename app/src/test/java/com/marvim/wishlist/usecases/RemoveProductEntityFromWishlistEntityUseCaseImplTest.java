@@ -32,46 +32,4 @@ class RemoveProductEntityFromWishlistEntityUseCaseImplTest {
 
         verify(wishlistRepository, times(1)).remove(clientId, productId);
     }
-
-    /*@Test
-    void shouldThrowWishlistNotFoundExceptionWhenWishlistNotFound() {
-        String clientId = "non-existent-client-id";
-        String productId = "product-id";
-
-        when(wishlistRepository.findByClientId(clientId)).thenReturn(Optional.empty());
-
-        WishlistNotFoundException exception = assertThrows(WishlistNotFoundException.class,() ->
-                useCase.execute(clientId, productId)
-        );
-
-        assertEquals("WishlistEntity not found for cilent: non-existent-client-id", exception.getMessage());
-        verify(wishlistRepository, times(1)).findByClientId(clientId);
-    }*/
-
-    /*@Test
-    void shouldThrowProductNotFoundExceptionWhenProductNotFoundInClientWishlist() {
-        String clientId = "client-id";
-        String productId = "non-existent-product-id";
-
-        ProductEntity existingProduct = ProductEntity.builder()
-                .id("product-id")
-                .name("Garrafa")
-                .description("Garrafa de café")
-                .build();
-
-        WishlistEntity wishlist = WishlistEntity.builder()
-                .id("wishlist-1")
-                .clientId(clientId)
-                .productyEntities(new ArrayList<>(List.of(existingProduct)))
-                .build();
-
-        when(wishlistRepository.findByClientId(clientId)).thenReturn(wishlist);
-
-        ProductNotFoundException exception = assertThrows(ProductNotFoundException.class,() ->
-                useCase.execute(clientId, productId)
-        );
-
-        assertEquals("ProductEntity non-existent-product-id not found in customer wishlist with id: client-id", exception.getMessage());
-        verify(wishlistRepository, times(1)).findByClientId(clientId);
-    }*/
 }

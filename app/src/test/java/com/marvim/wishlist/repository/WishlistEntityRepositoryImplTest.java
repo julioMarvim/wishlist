@@ -71,8 +71,8 @@ class WishlistEntityRepositoryImplTest {
         ArgumentCaptor<WishlistEntity> wishlistCaptor = ArgumentCaptor.forClass(WishlistEntity.class);
         verify(springDataRepository, times(1)).save(wishlistCaptor.capture());
 
-        List<ProductEntity> capturedProductyEntities = wishlistCaptor.getValue().getProducts();
-        assertTrue(capturedProductyEntities.contains(AddProductToEntityMapper.toEntity(addProductRequestOutputDto)));
+        List<ProductEntity> capturedProducts = wishlistCaptor.getValue().getProducts();
+        assertTrue(capturedProducts.contains(AddProductToEntityMapper.toEntity(addProductRequestOutputDto)));
     }
 
     @Test
@@ -90,8 +90,8 @@ class WishlistEntityRepositoryImplTest {
         ArgumentCaptor<WishlistEntity> wishlistCaptor = ArgumentCaptor.forClass(WishlistEntity.class);
         verify(springDataRepository, times(1)).save(wishlistCaptor.capture());
 
-        List<ProductEntity> capturedProductyEntities = wishlistCaptor.getValue().getProducts();
-        assertFalse(capturedProductyEntities.contains(AddProductToEntityMapper.toEntity(addProductRequestOutputDto)));
+        List<ProductEntity> capturedProducts = wishlistCaptor.getValue().getProducts();
+        assertFalse(capturedProducts.contains(AddProductToEntityMapper.toEntity(addProductRequestOutputDto)));
     }
 
     @Test
@@ -108,9 +108,9 @@ class WishlistEntityRepositoryImplTest {
 
     @Test
     void shouldThrowExceptionWhenWishlistLimitExceeded() {
-        List<ProductEntity> productyEntities = new ArrayList<>();
+        List<ProductEntity> products= new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            productyEntities.add(ProductEntity.builder()
+            products.add(ProductEntity.builder()
                     .id(String.valueOf(i))
                     .name("ProductEntity " + i)
                     .description("Description " + i)
@@ -120,7 +120,7 @@ class WishlistEntityRepositoryImplTest {
         wishlistEntity = WishlistEntity.builder()
                 .id("wishlistEntity-id")
                 .clientId(clientId)
-                .products(productyEntities)
+                .products(products)
                 .build();
 
         when(springDataRepository.findByClientId(clientId)).thenReturn(Optional.of(wishlistEntity));
