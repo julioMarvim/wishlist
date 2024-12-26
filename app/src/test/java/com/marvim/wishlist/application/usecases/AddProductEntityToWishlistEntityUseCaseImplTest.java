@@ -1,7 +1,9 @@
 package com.marvim.wishlist.application.usecases;
 
-import com.marvim.wishlist.domain.entity.Product;
-import com.marvim.wishlist.domain.ports.output.WishlistRepository;
+import com.marvim.wishlist.input.dto.request.AddProductRequestInputDto;
+import com.marvim.wishlist.output.WishlistRepository;
+import com.marvim.wishlist.output.dto.request.AddProductRequestOutputDto;
+import com.marvim.wishlist.usecases.AddProductToWishlistUseCaseImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -13,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class AddProductToWishlistUseCaseImplTest {
+class AddProductEntityToWishlistEntityUseCaseImplTest {
 
     @Mock
     private WishlistRepository wishlistRepository;
@@ -24,20 +26,22 @@ class AddProductToWishlistUseCaseImplTest {
     @Test
     void shouldSaveProductWhenExecutingUseCase() {
         String clientId = "client-id";
-        Product product = Product.builder()
-                .id("product-id")
+        AddProductRequestInputDto productyEntity = AddProductRequestInputDto.builder()
+                .id("productyEntity-id")
                 .name("Garrafa")
                 .description("Garrafa de café")
                 .build();
 
-        useCase.execute(clientId, product);
+        useCase.execute(clientId, productyEntity);
 
         ArgumentCaptor<String> clientIdCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<Product> productCaptor = ArgumentCaptor.forClass(Product.class);
+        ArgumentCaptor<AddProductRequestOutputDto> productCaptor = ArgumentCaptor.forClass(AddProductRequestOutputDto.class);
         verify(wishlistRepository).save(clientIdCaptor.capture(), productCaptor.capture());
 
         assertEquals(clientId, clientIdCaptor.getValue());
-        assertEquals(product, productCaptor.getValue());
+        assertEquals(productyEntity.getId(), productCaptor.getValue().getId());
+        assertEquals(productyEntity.getName(), productCaptor.getValue().getName());
+        assertEquals(productyEntity.getDescription(), productCaptor.getValue().getDescription());
     }
 }
 

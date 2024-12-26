@@ -1,26 +1,19 @@
 package com.marvim.wishlist.application.usecases;
 
-import com.marvim.wishlist.config.handler.exception.ProductNotFoundException;
-import com.marvim.wishlist.config.handler.exception.WishlistNotFoundException;
-import com.marvim.wishlist.domain.entity.Product;
-import com.marvim.wishlist.domain.entity.Wishlist;
-import com.marvim.wishlist.domain.ports.output.WishlistRepository;
+import com.marvim.wishlist.output.WishlistRepository;
+import com.marvim.wishlist.usecases.RemoveProductFromWishlistUseCaseImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class RemoveProductFromWishlistUseCaseImplTest {
+class RemoveProductEntityFromWishlistEntityUseCaseImplTest {
 
     @Mock
     private WishlistRepository wishlistRepository;
@@ -51,7 +44,7 @@ class RemoveProductFromWishlistUseCaseImplTest {
                 useCase.execute(clientId, productId)
         );
 
-        assertEquals("Wishlist not found for cilent: non-existent-client-id", exception.getMessage());
+        assertEquals("WishlistEntity not found for cilent: non-existent-client-id", exception.getMessage());
         verify(wishlistRepository, times(1)).findByClientId(clientId);
     }*/
 
@@ -60,16 +53,16 @@ class RemoveProductFromWishlistUseCaseImplTest {
         String clientId = "client-id";
         String productId = "non-existent-product-id";
 
-        Product existingProduct = Product.builder()
+        ProductEntity existingProduct = ProductEntity.builder()
                 .id("product-id")
                 .name("Garrafa")
                 .description("Garrafa de café")
                 .build();
 
-        Wishlist wishlist = Wishlist.builder()
+        WishlistEntity wishlist = WishlistEntity.builder()
                 .id("wishlist-1")
                 .clientId(clientId)
-                .products(new ArrayList<>(List.of(existingProduct)))
+                .productyEntities(new ArrayList<>(List.of(existingProduct)))
                 .build();
 
         when(wishlistRepository.findByClientId(clientId)).thenReturn(wishlist);
@@ -78,7 +71,7 @@ class RemoveProductFromWishlistUseCaseImplTest {
                 useCase.execute(clientId, productId)
         );
 
-        assertEquals("Product non-existent-product-id not found in customer wishlist with id: client-id", exception.getMessage());
+        assertEquals("ProductEntity non-existent-product-id not found in customer wishlist with id: client-id", exception.getMessage());
         verify(wishlistRepository, times(1)).findByClientId(clientId);
     }*/
 }

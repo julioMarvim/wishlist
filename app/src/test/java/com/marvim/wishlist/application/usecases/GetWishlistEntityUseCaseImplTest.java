@@ -1,9 +1,10 @@
 package com.marvim.wishlist.application.usecases;
 
-import com.marvim.wishlist.config.handler.exception.WishlistNotFoundException;
-import com.marvim.wishlist.domain.entity.Product;
-import com.marvim.wishlist.domain.entity.Wishlist;
-import com.marvim.wishlist.domain.ports.output.WishlistRepository;
+import com.marvim.wishlist.input.dto.response.WishlistResponseInputDto;
+import com.marvim.wishlist.output.WishlistRepository;
+import com.marvim.wishlist.output.dto.response.ProductResponseOutputDto;
+import com.marvim.wishlist.output.dto.response.WishlistResponseOutputDto;
+import com.marvim.wishlist.usecases.GetWishlistUseCaseImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,13 +13,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
-import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-public class GetWishlistUseCaseImplTest {
+public class GetWishlistEntityUseCaseImplTest {
 
     @Mock
     private WishlistRepository wishlistRepository;
@@ -26,33 +27,34 @@ public class GetWishlistUseCaseImplTest {
     @InjectMocks
     private GetWishlistUseCaseImpl useCase;
 
-    private Wishlist wishlist;
+    private WishlistResponseOutputDto wishlistResponseOutputDto;
 
     @BeforeEach
     void setUp() {
-        Product product1 = Product.builder()
+        ProductResponseOutputDto productEntity1 = ProductResponseOutputDto.builder()
                 .id("product-id-1")
                 .name("Garrafa")
                 .description("Garrafa de café")
                 .build();
 
-        Product product2 = Product.builder()
+        ProductResponseOutputDto productEntity2 = ProductResponseOutputDto.builder()
                 .id("product-id-2")
                 .name("Caneca")
                 .description("Caneca térmica")
                 .build();
 
-        wishlist = Wishlist.builder()
+        wishlistResponseOutputDto = WishlistResponseOutputDto.builder()
+                .id("wishlist-id")
                 .clientId("client-id")
-                .products(List.of(product1, product2))
+                .products(List.of(productEntity1, productEntity2))
                 .build();
     }
 
     @Test
     void shouldReturnWishlist() {
-        when(wishlistRepository.findByClientId("client-id")).thenReturn(wishlist);
+        when(wishlistRepository.findByClientId("client-id")).thenReturn(wishlistResponseOutputDto);
 
-        Wishlist result = useCase.execute("client-id");
+        WishlistResponseInputDto result = useCase.execute("client-id");
 
         assertNotNull(result);
         assertEquals("client-id", result.getClientId());
@@ -62,19 +64,4 @@ public class GetWishlistUseCaseImplTest {
 
         verify(wishlistRepository, times(1)).findByClientId("client-id");
     }
-
-    /*@Test
-    void shouldThrowWishlistNotFoundExceptionWhenWishlistNotFound() {
-        String clientId = "non-existent-client-id";
-
-        when(wishlistRepository.findByClientId(clientId)).thenReturn(Optional.empty());
-
-        WishlistNotFoundException exception = assertThrows(WishlistNotFoundException.class,() ->
-                useCase.execute(clientId)
-        );
-
-        assertEquals("Wishlist not found for cilent: non-existent-client-id", exception.getMessage());
-        verify(wishlistRepository, times(1)).findByClientId(clientId);
-    }*/
-
 }
