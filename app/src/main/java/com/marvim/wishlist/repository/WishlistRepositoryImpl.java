@@ -2,7 +2,7 @@ package com.marvim.wishlist.repository;
 
 import com.marvim.wishlist.output.dto.response.WishlistResponseOutputDto;
 import com.marvim.wishlist.repository.entity.WishlistEntity;
-import com.marvim.wishlist.repository.mapper.AddProductMapper;
+import com.marvim.wishlist.repository.mapper.AddProductToEntityMapper;
 import com.marvim.wishlist.input.exception.ProductAlreadyInWishlistException;
 import com.marvim.wishlist.input.exception.ProductNotFoundException;
 import com.marvim.wishlist.input.exception.WishlistLimitExceededException;
@@ -10,7 +10,7 @@ import com.marvim.wishlist.input.exception.WishlistNotFoundException;
 import com.marvim.wishlist.repository.entity.WishlistFactory;
 import com.marvim.wishlist.output.WishlistRepository;
 import com.marvim.wishlist.output.dto.request.AddProductRequestOutputDto;
-import com.marvim.wishlist.repository.mapper.WishlistResponseDtoMapper;
+import com.marvim.wishlist.repository.mapper.WishlistToOutputMapper;
 import com.marvim.wishlist.repository.mongo.SpringDataWishlistRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -34,7 +34,7 @@ public class WishlistRepositoryImpl implements WishlistRepository {
 
         validateWishlistLimit(wishlistEntity);
         validateProductNotInWishlist(wishlistEntity, addProductRequestOutputDto);
-        wishlistEntity.addProduct(AddProductMapper.toEntity(addProductRequestOutputDto));
+        wishlistEntity.addProduct(AddProductToEntityMapper.toEntity(addProductRequestOutputDto));
         repository.save(wishlistEntity);
         logger.info("WishlistEntity with ID: {} successfully updated in database for customer with ID: {}", wishlistEntity.getId(), wishlistEntity.getClientId());
     }
@@ -51,7 +51,7 @@ public class WishlistRepositoryImpl implements WishlistRepository {
     @Override
     public WishlistResponseOutputDto findByClientId(String clientId) {
         logger.info("Starting database operation to find wishlistEntity for client with ID: {}", clientId);
-        WishlistResponseOutputDto wishlistResponseOutputDto = WishlistResponseDtoMapper.toOutputDto(getWishlist(clientId));
+        WishlistResponseOutputDto wishlistResponseOutputDto = WishlistToOutputMapper.toOutputDto(getWishlist(clientId));
         logger.info("Successfully retrieved wishlistEntity with ID: {} from customer with ID: {}", wishlistResponseOutputDto.getId(), clientId);
         return wishlistResponseOutputDto;
     }

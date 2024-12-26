@@ -8,7 +8,7 @@ import com.marvim.wishlist.output.dto.response.WishlistResponseOutputDto;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class WishlistResponseMapper {
+public class WishlistToInputMapper {
 
     public static WishlistResponseInputDto toInputDto(WishlistResponseOutputDto wishlistResponseOutputDto) {
         List<ProductResponseInputDto> productResponses = toProductsInputDto(wishlistResponseOutputDto.getProducts());

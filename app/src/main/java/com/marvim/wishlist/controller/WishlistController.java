@@ -3,8 +3,8 @@ package com.marvim.wishlist.controller;
 import com.marvim.wishlist.controller.dto.request.AddProductRequest;
 import com.marvim.wishlist.controller.dto.response.ApiResponse;
 import com.marvim.wishlist.controller.dto.response.WishlistResponse;
-import com.marvim.wishlist.controller.mapper.AddProductRequestMapper;
-import com.marvim.wishlist.controller.mapper.WishlistResponseMapper;
+import com.marvim.wishlist.controller.mapper.AddProductToInputMapper;
+import com.marvim.wishlist.controller.mapper.WishlistToResponseMapper;
 import com.marvim.wishlist.input.AddProductToWishlistUseCase;
 import com.marvim.wishlist.input.CheckProductInWishlistUseCase;
 import com.marvim.wishlist.input.GetWishlistUseCase;
@@ -33,7 +33,7 @@ public class WishlistController {
     public ResponseEntity<Void> add(@PathVariable("clientId") String clientId,
                                     @Valid @RequestBody AddProductRequest request) {
         logger.info("Received request to add product with ID: {} to wishlist for client with ID: {}", request.getId(), clientId);
-        addProductToWishlistUseCase.execute(clientId, AddProductRequestMapper.toDto(request));
+        addProductToWishlistUseCase.execute(clientId, AddProductToInputMapper.toInput(request));
         logger.info("Success in adding the product with ID: {} to the wish list for the customer with ID: {}", request.getId(), clientId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -50,7 +50,7 @@ public class WishlistController {
     @GetMapping("/{clientId}")
     public ResponseEntity<ApiResponse<WishlistResponse>> getWishlist(@PathVariable("clientId") String clientId) {
         logger.info("Received request to fetch wishlistEntity for client with ID: {}", clientId);
-        WishlistResponse wishlistResponse = WishlistResponseMapper.toResponse(getWishlistUseCase.execute(clientId));
+        WishlistResponse wishlistResponse = WishlistToResponseMapper.toResponse(getWishlistUseCase.execute(clientId));
         logger.info("WishlistEntity for client with ID: {} retrieved successfully", clientId);
         return ResponseEntity.ok(new ApiResponse<>(wishlistResponse));
     }

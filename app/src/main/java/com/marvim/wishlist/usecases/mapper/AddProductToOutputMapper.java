@@ -3,7 +3,7 @@ package com.marvim.wishlist.usecases.mapper;
 import com.marvim.wishlist.input.dto.request.AddProductRequestInputDto;
 import com.marvim.wishlist.output.dto.request.AddProductRequestOutputDto;
 
-public class AddProductMapper {
+public class AddProductToOutputMapper {
 
     public static AddProductRequestOutputDto toOutputDto(AddProductRequestInputDto request) {
         return AddProductRequestOutputDto.builder()
