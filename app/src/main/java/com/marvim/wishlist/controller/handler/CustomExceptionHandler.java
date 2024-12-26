@@ -1,6 +1,7 @@
 package com.marvim.wishlist.controller.handler;
 
-import com.marvim.wishlist.controller.dto.response.ApiResponse;
+import com.marvim.wishlist.controller.dto.response.ApiResponseDto;
+import com.marvim.wishlist.controller.dto.response.ErrorResponseDto;
 import com.marvim.wishlist.input.exception.ProductAlreadyInWishlistException;
 import com.marvim.wishlist.input.exception.ProductNotFoundException;
 import com.marvim.wishlist.input.exception.WishlistLimitExceededException;
@@ -26,45 +27,68 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex, HttpHeaders headers,
             HttpStatusCode status, WebRequest request) {
-        List<ErrorResponse.ErrorDetail> errors = new ArrayList<>();
+        List<ErrorResponseDto.ErrorDetail> errors = new ArrayList<>();
         for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
-            errors.add(new ErrorResponse.ErrorDetail(fieldError.getField(), fieldError.getDefaultMessage()));
+            errors.add(new ErrorResponseDto.ErrorDetail(fieldError.getField(), fieldError.getDefaultMessage()));
         }
-        ErrorResponse errorResponse = new ErrorResponse("VALIDATION_FAILED", errors);
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto("VALIDATION_FAILED", errors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDto<>(errorResponseDto));
     }
 
     @ExceptionHandler(ProductAlreadyInWishlistException.class)
-    public ResponseEntity<ApiResponse<ErrorResponse>> handleProductAlreadyInWishlistException(ProductAlreadyInWishlistException ex) {
-        List<ErrorResponse.ErrorDetail> errors = new ArrayList<>();
-        errors.add(new ErrorResponse.ErrorDetail(null, ex.getMessage()));
-        ErrorResponse errorResponse = new ErrorResponse("PRODUCT_ALREADY_IN_WISHLIST", errors);
-        ApiResponse<ErrorResponse> apiResponse = new ApiResponse<>(errorResponse);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
+    public ResponseEntity<ApiResponseDto<ErrorResponseDto>> handleProductAlreadyInWishlistException(ProductAlreadyInWishlistException ex) {
+        List<ErrorResponseDto.ErrorDetail> errors = new ArrayList<>();
+        errors.add(new ErrorResponseDto.ErrorDetail(null, ex.getMessage()));
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto("PRODUCT_ALREADY_IN_WISHLIST", errors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDto<>(errorResponseDto));
     }
 
     @ExceptionHandler(WishlistLimitExceededException.class)
-    public ResponseEntity<ErrorResponse> handleWishlistLimitExceededException(WishlistLimitExceededException ex) {
-        List<ErrorResponse.ErrorDetail> errors = new ArrayList<>();
-        errors.add(new ErrorResponse.ErrorDetail(null, ex.getMessage()));
-        ErrorResponse errorResponse = new ErrorResponse("LIMIT_EXCEEDED", errors);
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ApiResponseDto<ErrorResponseDto>> handleWishlistLimitExceededException(WishlistLimitExceededException ex) {
+        List<ErrorResponseDto.ErrorDetail> errors = new ArrayList<>();
+        errors.add(new ErrorResponseDto.ErrorDetail(null, ex.getMessage()));
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto("LIMIT_EXCEEDED", errors);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponseDto<>(errorResponseDto));
     }
 
     @ExceptionHandler(WishlistNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleWishlistNotFoundException(WishlistNotFoundException ex) {
-        List<ErrorResponse.ErrorDetail> errors = new ArrayList<>();
-        errors.add(new ErrorResponse.ErrorDetail(null, ex.getMessage()));
-        ErrorResponse errorResponse = new ErrorResponse("WISHLIST_NOT_FOUND_ERROR", errors);
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ApiResponseDto<ErrorResponseDto>> handleWishlistNotFoundException(WishlistNotFoundException ex) {
+        List<ErrorResponseDto.ErrorDetail> errors = new ArrayList<>();
+        errors.add(new ErrorResponseDto.ErrorDetail(null, ex.getMessage()));
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto("WISHLIST_NOT_FOUND_ERROR", errors);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponseDto<>(errorResponseDto));
     }
 
     @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleProductNotFoundException(ProductNotFoundException ex) {
-        List<ErrorResponse.ErrorDetail> errors = new ArrayList<>();
-        errors.add(new ErrorResponse.ErrorDetail(null, ex.getMessage()));
-        ErrorResponse errorResponse = new ErrorResponse("PRODUCT_NOT_FOUND_ERROR", errors);
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    public ResponseEntity<ApiResponseDto<ErrorResponseDto>> handleProductNotFoundException(ProductNotFoundException ex) {
+        List<ErrorResponseDto.ErrorDetail> errors = new ArrayList<>();
+        errors.add(new ErrorResponseDto.ErrorDetail(null, ex.getMessage()));
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto("PRODUCT_NOT_FOUND_ERROR", errors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDto<>(errorResponseDto));
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponseDto<ErrorResponseDto>> handleIllegalArgumentException(IllegalArgumentException ex) {
+        List<ErrorResponseDto.ErrorDetail> errors = List.of(new ErrorResponseDto.ErrorDetail(null, ex.getMessage()));
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto("INVALID_ARGUMENT", errors);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDto<>(errorResponseDto));
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ApiResponseDto<ErrorResponseDto>> handleIllegalStateException(IllegalStateException ex) {
+        List<ErrorResponseDto.ErrorDetail> errors = List.of(new ErrorResponseDto.ErrorDetail(null, ex.getMessage()));
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto("ILLEGAL_STATE", errors);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponseDto<>(errorResponseDto));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResponseDto<?>> handleException(Exception ex) {
+        List<ErrorResponseDto.ErrorDetail> errors = List.of(
+                new ErrorResponseDto.ErrorDetail(null, "An unexpected error occurred: " + ex.getMessage())
+        );
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto("INTERNAL_SERVER_ERROR", errors);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponseDto<>(errorResponseDto));
     }
 
 }

@@ -1,10 +1,11 @@
 package com.marvim.wishlist.controller;
 
 import com.marvim.wishlist.controller.dto.request.AddProductRequest;
-import com.marvim.wishlist.controller.dto.response.ApiResponse;
-import com.marvim.wishlist.controller.dto.response.WishlistResponse;
+import com.marvim.wishlist.controller.dto.response.ApiResponseDto;
+import com.marvim.wishlist.controller.dto.response.WishlistResponseDto;
 import com.marvim.wishlist.controller.mapper.AddProductToInputMapper;
 import com.marvim.wishlist.controller.mapper.WishlistToResponseMapper;
+import com.marvim.wishlist.controller.openapi.WishlistOpenApi;
 import com.marvim.wishlist.input.AddProductToWishlistUseCase;
 import com.marvim.wishlist.input.CheckProductInWishlistUseCase;
 import com.marvim.wishlist.input.GetWishlistUseCase;
@@ -19,8 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/wishlist")
-public class WishlistController {
+@RequestMapping("/api/v1/wishlist")
+public class WishlistController implements WishlistOpenApi {
 
     private static final Logger logger = LoggerFactory.getLogger(WishlistController.class);
 
@@ -29,6 +30,7 @@ public class WishlistController {
     private final GetWishlistUseCase getWishlistUseCase;
     private final CheckProductInWishlistUseCase checkProductInWishlistUseCase;
 
+    @Override
     @PostMapping("/{clientId}")
     public ResponseEntity<Void> add(@PathVariable("clientId") String clientId,
                                     @Valid @RequestBody AddProductRequest request) {
@@ -39,8 +41,8 @@ public class WishlistController {
     }
 
     @DeleteMapping("/{clientId}/{productId}")
-    public ResponseEntity<ApiResponse<Void>> remove(@PathVariable("clientId") String clientId,
-                                                    @PathVariable("productId") String productId) {
+    public ResponseEntity<ApiResponseDto<Void>> remove(@PathVariable("clientId") String clientId,
+                                                       @PathVariable("productId") String productId) {
         logger.info("Received request to remove product with ID: {} to wishlist for client with ID: {}", productId, clientId);
         removeProductFromWishlistUseCase.execute(clientId, productId);
         logger.info("Success in remove the product with ID: {} to the wish list for the customer with ID: {}", productId, clientId);
@@ -48,19 +50,20 @@ public class WishlistController {
     }
 
     @GetMapping("/{clientId}")
-    public ResponseEntity<ApiResponse<WishlistResponse>> getWishlist(@PathVariable("clientId") String clientId) {
-        logger.info("Received request to fetch wishlistEntity for client with ID: {}", clientId);
-        WishlistResponse wishlistResponse = WishlistToResponseMapper.toResponse(getWishlistUseCase.execute(clientId));
-        logger.info("WishlistEntity for client with ID: {} retrieved successfully", clientId);
-        return ResponseEntity.ok(new ApiResponse<>(wishlistResponse));
+    public ResponseEntity<ApiResponseDto<WishlistResponseDto>> getWishlist(@PathVariable("clientId") String clientId) {
+        logger.info("Received request to fetch wishlist for client with ID: {}", clientId);
+        WishlistResponseDto wishlistResponseDto = WishlistToResponseMapper.toResponse(getWishlistUseCase.execute(clientId));
+        logger.info("Wishlist for client with ID: {} retrieved successfully", clientId);
+        return ResponseEntity.ok(new ApiResponseDto<>(wishlistResponseDto));
     }
 
     @GetMapping("/{clientId}/{productId}/exists")
-    public ResponseEntity<ApiResponse<Void>> checkProductInWishlist(@PathVariable("clientId") String clientId,
-                                                                    @PathVariable("productId") String productId) {
+    public ResponseEntity<ApiResponseDto<Void>> checkProductInWishlist(@PathVariable("clientId") String clientId,
+                                                                       @PathVariable("productId") String productId) {
         logger.info("Received request to check if product with ID: {} exists in client {}'s wishlist", productId, clientId);
         checkProductInWishlistUseCase.execute(clientId, productId);
-        logger.info("Success in checking if the product with ID; {} exists in to the wish list for the customer with ID: {}", productId, clientId);
+        logger.info("Success in checking if the product with ID: {} exists in to the wishlist for the client with ID: {}", productId, clientId);
         return ResponseEntity.ok().build();
     }
 }
+

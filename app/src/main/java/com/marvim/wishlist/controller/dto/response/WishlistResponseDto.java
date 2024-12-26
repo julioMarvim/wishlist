@@ -11,8 +11,8 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class WishlistResponse {
+public class WishlistResponseDto {
     private String id;
     private String clientId;
-    private List<ProductResponse> products;
+    private List<ProductResponseDto> products;
 }

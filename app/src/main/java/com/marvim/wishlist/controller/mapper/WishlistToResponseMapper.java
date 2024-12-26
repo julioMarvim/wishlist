@@ -1,7 +1,7 @@
 package com.marvim.wishlist.controller.mapper;
 
-import com.marvim.wishlist.controller.dto.response.ProductResponse;
-import com.marvim.wishlist.controller.dto.response.WishlistResponse;
+import com.marvim.wishlist.controller.dto.response.ProductResponseDto;
+import com.marvim.wishlist.controller.dto.response.WishlistResponseDto;
 import com.marvim.wishlist.input.dto.response.ProductResponseInputDto;
 import com.marvim.wishlist.input.dto.response.WishlistResponseInputDto;
 
@@ -10,18 +10,18 @@ import java.util.stream.Collectors;
 
 public class WishlistToResponseMapper {
 
-    public static WishlistResponse toResponse(WishlistResponseInputDto wishlistResponseInputDto) {
-        List<ProductResponse> productResponses = mapProductsToProductResponses(wishlistResponseInputDto.getProducts());
-        return WishlistResponse.builder()
+    public static WishlistResponseDto toResponse(WishlistResponseInputDto wishlistResponseInputDto) {
+        List<ProductResponseDto> productResponsDtos = mapProductsToProductResponses(wishlistResponseInputDto.getProducts());
+        return WishlistResponseDto.builder()
                 .id(wishlistResponseInputDto.getId())
                 .clientId(wishlistResponseInputDto.getClientId())
-                .products(productResponses)
+                .products(productResponsDtos)
                 .build();
     }
 
-    private static List<ProductResponse> mapProductsToProductResponses(List<ProductResponseInputDto> productResponseInputDtos) {
+    private static List<ProductResponseDto> mapProductsToProductResponses(List<ProductResponseInputDto> productResponseInputDtos) {
         return productResponseInputDtos.stream()
-                .map(product -> new ProductResponse(
+                .map(product -> new ProductResponseDto(
                         product.getId(),
                         product.getName(),
                         product.getDescription()))

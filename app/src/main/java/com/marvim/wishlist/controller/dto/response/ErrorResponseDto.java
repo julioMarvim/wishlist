@@ -1,4 +1,4 @@
-package com.marvim.wishlist.controller.handler;
+package com.marvim.wishlist.controller.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ErrorResponse {
+public class ErrorResponseDto {
 
     private String code;
     private List<ErrorDetail> errors;
