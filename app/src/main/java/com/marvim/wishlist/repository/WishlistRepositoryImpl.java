@@ -1,4 +1,4 @@
-package com.marvim.wishlist.repository.mongo;
+package com.marvim.wishlist.repository;
 
 import com.marvim.wishlist.output.dto.response.WishlistResponseOutputDto;
 import com.marvim.wishlist.repository.entity.WishlistEntity;
@@ -11,6 +11,7 @@ import com.marvim.wishlist.repository.entity.WishlistFactory;
 import com.marvim.wishlist.output.WishlistRepository;
 import com.marvim.wishlist.output.dto.request.AddProductRequestOutputDto;
 import com.marvim.wishlist.repository.mapper.WishlistResponseDtoMapper;
+import com.marvim.wishlist.repository.mongo.SpringDataWishlistRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

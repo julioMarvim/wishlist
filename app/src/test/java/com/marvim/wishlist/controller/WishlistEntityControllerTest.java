@@ -1,4 +1,4 @@
-package com.marvim.wishlist.adapter.controller;
+package com.marvim.wishlist.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

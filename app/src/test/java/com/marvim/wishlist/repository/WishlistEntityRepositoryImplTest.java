@@ -1,4 +1,4 @@
-package com.marvim.wishlist.adapter.repository.mongo;
+package com.marvim.wishlist.repository;
 
 import com.marvim.wishlist.output.dto.response.WishlistResponseOutputDto;
 import com.marvim.wishlist.repository.entity.ProductEntity;
@@ -10,7 +10,6 @@ import com.marvim.wishlist.input.exception.WishlistLimitExceededException;
 import com.marvim.wishlist.input.exception.WishlistNotFoundException;
 import com.marvim.wishlist.output.dto.request.AddProductRequestOutputDto;
 import com.marvim.wishlist.repository.mongo.SpringDataWishlistRepository;
-import com.marvim.wishlist.repository.mongo.WishlistRepositoryImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
