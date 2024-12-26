@@ -1,4 +1,4 @@
-package com.marvim.wishlist.application.usecases;
+package com.marvim.wishlist.usecases;
 
 import com.marvim.wishlist.repository.entity.ProductEntity;
 import com.marvim.wishlist.repository.entity.WishlistEntity;

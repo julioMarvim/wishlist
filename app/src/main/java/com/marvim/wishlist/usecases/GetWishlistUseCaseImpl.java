@@ -3,7 +3,7 @@ package com.marvim.wishlist.usecases;
 import com.marvim.wishlist.input.GetWishlistUseCase;
 import com.marvim.wishlist.input.dto.response.WishlistResponseInputDto;
 import com.marvim.wishlist.output.WishlistRepository;
-import com.marvim.wishlist.usecases.mapper.WishlistResponseDtoMapper;
+import com.marvim.wishlist.usecases.mapper.WishlistToInputMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +20,6 @@ public class GetWishlistUseCaseImpl implements GetWishlistUseCase {
     @Override
     public WishlistResponseInputDto execute(String clientId) {
         logger.info("Starting operation to fetch wishlist for client with ID: {}", clientId);
-        return WishlistResponseDtoMapper.toInputDto(wishlistRepository.findByClientId(clientId));
+        return WishlistToInputMapper.toInputDto(wishlistRepository.findByClientId(clientId));
     }
 }

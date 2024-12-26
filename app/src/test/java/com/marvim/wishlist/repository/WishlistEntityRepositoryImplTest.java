@@ -1,16 +1,15 @@
-package com.marvim.wishlist.adapter.repository.mongo;
+package com.marvim.wishlist.repository;
 
 import com.marvim.wishlist.output.dto.response.WishlistResponseOutputDto;
 import com.marvim.wishlist.repository.entity.ProductEntity;
 import com.marvim.wishlist.repository.entity.WishlistEntity;
-import com.marvim.wishlist.repository.mapper.AddProductMapper;
+import com.marvim.wishlist.repository.mapper.AddProductToEntityMapper;
 import com.marvim.wishlist.input.exception.ProductAlreadyInWishlistException;
 import com.marvim.wishlist.input.exception.ProductNotFoundException;
 import com.marvim.wishlist.input.exception.WishlistLimitExceededException;
 import com.marvim.wishlist.input.exception.WishlistNotFoundException;
 import com.marvim.wishlist.output.dto.request.AddProductRequestOutputDto;
 import com.marvim.wishlist.repository.mongo.SpringDataWishlistRepository;
-import com.marvim.wishlist.repository.mongo.WishlistRepositoryImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,7 +49,7 @@ class WishlistEntityRepositoryImplTest {
         wishlistEntity = WishlistEntity.builder()
                 .id("wishlistEntity-id")
                 .clientId(clientId)
-                .products(List.of(AddProductMapper.toEntity(addProductRequestOutputDto)))
+                .products(List.of(AddProductToEntityMapper.toEntity(addProductRequestOutputDto)))
                 .build();
 
         wishlistRepository = new WishlistRepositoryImpl(springDataRepository);
@@ -73,7 +72,7 @@ class WishlistEntityRepositoryImplTest {
         verify(springDataRepository, times(1)).save(wishlistCaptor.capture());
 
         List<ProductEntity> capturedProductyEntities = wishlistCaptor.getValue().getProducts();
-        assertTrue(capturedProductyEntities.contains(AddProductMapper.toEntity(addProductRequestOutputDto)));
+        assertTrue(capturedProductyEntities.contains(AddProductToEntityMapper.toEntity(addProductRequestOutputDto)));
     }
 
     @Test
@@ -81,7 +80,7 @@ class WishlistEntityRepositoryImplTest {
         wishlistEntity = WishlistEntity.builder()
                 .id("wishlistEntity-id")
                 .clientId(clientId)
-                .products(new ArrayList<>(List.of(AddProductMapper.toEntity(addProductRequestOutputDto))))
+                .products(new ArrayList<>(List.of(AddProductToEntityMapper.toEntity(addProductRequestOutputDto))))
                 .build();
 
         when(springDataRepository.findByClientId(clientId)).thenReturn(Optional.of(wishlistEntity));
@@ -92,7 +91,7 @@ class WishlistEntityRepositoryImplTest {
         verify(springDataRepository, times(1)).save(wishlistCaptor.capture());
 
         List<ProductEntity> capturedProductyEntities = wishlistCaptor.getValue().getProducts();
-        assertFalse(capturedProductyEntities.contains(AddProductMapper.toEntity(addProductRequestOutputDto)));
+        assertFalse(capturedProductyEntities.contains(AddProductToEntityMapper.toEntity(addProductRequestOutputDto)));
     }
 
     @Test
@@ -140,7 +139,7 @@ class WishlistEntityRepositoryImplTest {
         wishlistEntity = WishlistEntity.builder()
                 .id("wishlistEntity-id")
                 .clientId(clientId)
-                .products(new ArrayList<>(List.of(AddProductMapper.toEntity(addProductRequestOutputDto))))
+                .products(new ArrayList<>(List.of(AddProductToEntityMapper.toEntity(addProductRequestOutputDto))))
                 .build();
 
         when(springDataRepository.findByClientId(clientId)).thenReturn(Optional.of(wishlistEntity));

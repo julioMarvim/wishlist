@@ -1,4 +1,4 @@
-package com.marvim.wishlist.application.usecases;
+package com.marvim.wishlist.usecases;
 
 import com.marvim.wishlist.output.WishlistRepository;
 import com.marvim.wishlist.usecases.RemoveProductFromWishlistUseCaseImpl;

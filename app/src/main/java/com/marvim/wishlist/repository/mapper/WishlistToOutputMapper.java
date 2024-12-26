@@ -1,7 +1,5 @@
 package com.marvim.wishlist.repository.mapper;
 
-import com.marvim.wishlist.input.dto.response.ProductResponseInputDto;
-import com.marvim.wishlist.input.dto.response.WishlistResponseInputDto;
 import com.marvim.wishlist.output.dto.response.ProductResponseOutputDto;
 import com.marvim.wishlist.output.dto.response.WishlistResponseOutputDto;
 import com.marvim.wishlist.repository.entity.ProductEntity;
@@ -10,7 +8,7 @@ import com.marvim.wishlist.repository.entity.WishlistEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class WishlistResponseDtoMapper {
+public class WishlistToOutputMapper {
 
     public static WishlistResponseOutputDto toOutputDto(WishlistEntity wishlistEntity) {
         List<ProductResponseOutputDto> productResponses = toProductsOutputDto(wishlistEntity.getProducts());
