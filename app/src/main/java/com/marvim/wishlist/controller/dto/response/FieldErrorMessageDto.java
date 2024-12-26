@@ -1,4 +1,4 @@
-package com.marvim.wishlist.controller.handler;
+package com.marvim.wishlist.controller.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FieldErrorMessage {
+public class FieldErrorMessageDto {
     private String field;
     private String message;
 }

@@ -28,36 +28,41 @@ public class WishlistRepositoryImpl implements WishlistRepository {
 
     @Override
     public void save(String clientId, AddProductRequestOutputDto addProductRequestOutputDto) {
-        logger.info("Starting database operation to save wishlistEntity for client with ID: {}", clientId);
+        logger.info("Starting database operation to save wishlist for client with ID: {}", clientId);
         WishlistEntity wishlistEntity = repository.findByClientId(clientId)
                 .orElseGet(() -> WishlistFactory.createNew(clientId));
 
-        validateWishlistLimit(wishlistEntity);
-        validateProductNotInWishlist(wishlistEntity, addProductRequestOutputDto);
+        wishlistValidations(addProductRequestOutputDto, wishlistEntity);
         wishlistEntity.addProduct(AddProductToEntityMapper.toEntity(addProductRequestOutputDto));
         repository.save(wishlistEntity);
-        logger.info("WishlistEntity with ID: {} successfully updated in database for customer with ID: {}", wishlistEntity.getId(), wishlistEntity.getClientId());
+        logger.info("Wishlist with ID: {} successfully updated in database for customer with ID: {}", wishlistEntity.getId(), wishlistEntity.getClientId());
+    }
+
+    private void wishlistValidations(AddProductRequestOutputDto addProductRequestOutputDto, WishlistEntity wishlistEntity) {
+        validateWishlistLimit(wishlistEntity);
+        validateProductAlreadyExistsInWishlist(wishlistEntity, addProductRequestOutputDto);
     }
 
     @Override
     public void remove(String clientId, String productId) {
-        logger.info("Starting database operation to remove product with ID: {} in wishlistEntity from client with ID: {}", productId, clientId);
+        logger.info("Starting database operation to remove product with ID: {} in wishlist from client with ID: {}", productId, clientId);
         WishlistEntity wishlistEntity = getWishlist(clientId);
         wishlistEntity.removeProduct(productId);
         repository.save(wishlistEntity);
-        logger.info("Success in removing product with ID: {} from wishlistEntity with ID: {} from customer with ID: {}", productId, wishlistEntity.getId(), wishlistEntity.getClientId());
+        logger.info("Success in removing product with ID: {} from wishlist with ID: {} from customer with ID: {}", productId, wishlistEntity.getId(), wishlistEntity.getClientId());
     }
 
     @Override
     public WishlistResponseOutputDto findByClientId(String clientId) {
-        logger.info("Starting database operation to find wishlistEntity for client with ID: {}", clientId);
+        logger.info("Starting database operation to find wishlist for client with ID: {}", clientId);
         WishlistResponseOutputDto wishlistResponseOutputDto = WishlistToOutputMapper.toOutputDto(getWishlist(clientId));
-        logger.info("Successfully retrieved wishlistEntity with ID: {} from customer with ID: {}", wishlistResponseOutputDto.getId(), clientId);
+        logger.info("Successfully retrieved wishlist with ID: {} from customer with ID: {}", wishlistResponseOutputDto.getId(), clientId);
         return wishlistResponseOutputDto;
     }
 
+    @Override
     public void checkProductInWishlist(String clientId, String productId) {
-        logger.info("Starting database operation to check if product with ID: {} exists in wishlistEntity for client with ID: {}", productId, clientId);
+        logger.info("Starting database operation to check if product with ID: {} exists in wishlist for client with ID: {}", productId, clientId);
         WishlistEntity wishlistEntity = getWishlist(clientId);
         validateProductInWhishlist(clientId, productId, wishlistEntity);
     }
@@ -65,30 +70,30 @@ public class WishlistRepositoryImpl implements WishlistRepository {
     private WishlistEntity getWishlist(String clientId) {
         return repository.findByClientId(clientId)
                 .orElseThrow(() -> {
-                    logger.error("WishlistEntity for client with ID: {} not found", clientId);
+                    logger.error("Wishlist for client with ID: {} not found", clientId);
                     return new WishlistNotFoundException(clientId);
                 });
     }
 
     private void validateWishlistLimit(WishlistEntity wishlistEntity) {
         if (wishlistEntity.getProducts().size() >= MAX_PRODUCTS) {
-            logger.error("WishlistEntity for client with ID: {} exceeds the limit of {} productyEntities", wishlistEntity.getClientId(), MAX_PRODUCTS);
+            logger.error("Wishlist for client with ID: {} exceeds the limit of {} products", wishlistEntity.getClientId(), MAX_PRODUCTS);
             throw new WishlistLimitExceededException(wishlistEntity.getClientId());
         }
     }
 
-    private void validateProductNotInWishlist(WishlistEntity wishlistEntity, AddProductRequestOutputDto productyEntity) {
+    private void validateProductAlreadyExistsInWishlist(WishlistEntity wishlistEntity, AddProductRequestOutputDto productyEntity) {
         boolean exists = wishlistEntity.getProducts().stream()
                 .anyMatch(p -> p.getId().equals(productyEntity.getId()));
         if (exists) {
-            logger.error("ProductEntity with ID: {} already exists in wishlistEntity for client with ID: {}", productyEntity.getId(), wishlistEntity.getClientId());
+            logger.error("ProductEntity with ID: {} already exists in wishlist for client with ID: {}", productyEntity.getId(), wishlistEntity.getClientId());
             throw new ProductAlreadyInWishlistException(wishlistEntity.getClientId(), productyEntity.getId());
         }
     }
 
     private static void validateProductInWhishlist(String clientId, String productId, WishlistEntity wishlistEntity) {
         if (wishlistEntity.getProducts().stream().noneMatch(product -> product.getId().equals(productId))) {
-            logger.error("ProductEntity with ID: {} not found in wishlistEntity for client with ID: {}", productId, clientId);
+            logger.error("ProductEntity with ID: {} not found in wishlist for client with ID: {}", productId, clientId);
             throw new ProductNotFoundException(clientId, productId);
         }
     }

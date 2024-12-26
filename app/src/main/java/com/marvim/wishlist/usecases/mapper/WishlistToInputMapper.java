@@ -13,6 +13,7 @@ public class WishlistToInputMapper {
     public static WishlistResponseInputDto toInputDto(WishlistResponseOutputDto wishlistResponseOutputDto) {
         List<ProductResponseInputDto> productResponses = toProductsInputDto(wishlistResponseOutputDto.getProducts());
         return WishlistResponseInputDto.builder()
+                .id(wishlistResponseOutputDto.getId())
                 .clientId(wishlistResponseOutputDto.getClientId())
                 .products(productResponses)
                 .build();
