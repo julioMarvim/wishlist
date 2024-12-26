@@ -11,9 +11,9 @@
 	</parent>
 
 	<groupId>com.marvim</groupId>
-	<artifactId>wishlist</artifactId>
+	<artifactId>wishlistEntity</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>wishlist</name>
+	<name>wishlistEntity</name>
 	<description>Wishlist backend service</description>
 
 	<properties>

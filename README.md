@@ -24,6 +24,3 @@ Docker e o Docker Compose instalados na sua máquina.
 1. Clone o repositório da aplicação para sua máquina.
 2. Navegue até o diretório do projeto.
 3. Execute o comando a seguir para construir e iniciar os containers:
-
-```bash
-docker-compose up -d --build
