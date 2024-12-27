@@ -30,7 +30,7 @@ public class GetWishlistFullStep {
     private String clientId;
     private List<AddProductRequestOutputDto> products;
 
-    @Dado("que existe uma wishlist cadastrada no sistema:")
+    @Dado("que existe uma wishlist cadastrada no sistema para o clientId 1:")
     public void queExisteUmaWishlistCadastradaNoSistema(DataTable dataTable) throws Exception {
         List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
         for (Map<String, String> columns : rows) {
