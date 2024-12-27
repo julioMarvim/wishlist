@@ -19,6 +19,7 @@ public class ErrorResponseDto {
 
     @Getter
     @Setter
+    @NoArgsConstructor
     @AllArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class ErrorDetail {

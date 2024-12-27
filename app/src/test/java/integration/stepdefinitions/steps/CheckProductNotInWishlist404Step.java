@@ -1,9 +1,13 @@
 package integration.stepdefinitions.steps;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.marvim.wishlist.controller.dto.response.ApiResponseDto;
+import com.marvim.wishlist.controller.dto.response.ErrorResponseDto;
 import com.marvim.wishlist.output.WishlistRepository;
 import com.marvim.wishlist.output.dto.request.AddProductRequestOutputDto;
+import com.marvim.wishlist.output.dto.response.WishlistResponseOutputDto;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Entao;
@@ -18,7 +22,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CheckProductInWishlist200Step extends BaseSteps {
+public class CheckProductNotInWishlist404Step extends BaseSteps {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
@@ -30,7 +34,7 @@ public class CheckProductInWishlist200Step extends BaseSteps {
     private String clientId;
     private List<AddProductRequestOutputDto> products;
 
-    @Dado("que existe uma wishlist cadastrada no sistema para o clientId 2:")
+    @Dado("que existe uma wishlist cadastrada no sistema para o clientId 4:")
     public void queExisteUmaWishlistCadastradaNoSistemaParaOClientId2(DataTable dataTable) throws Exception {
         List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
         for (Map<String, String> columns : rows) {
@@ -49,19 +53,26 @@ public class CheckProductInWishlist200Step extends BaseSteps {
         products.forEach(product -> wishlistRepository.save(clientId, product));
     }
 
-    @Quando("eu faço uma requisição GET para verificar se o produto de id {string} está na wishlist do clientId 2")
+    @Quando("eu faço uma requisição GET para verificar se o produto de id {string} está na wishlist do clientId 4")
     public void euFacoUmaRequisicaoGETParaObterAWishlist(String productId) {
         response = verificarSeProdutoEstaNaWishlist(clientId, productId);
     }
 
 
-    @Entao("a resposta quando o produto está na wishlist deve ter o status code OK {int}")
-    public void aRespostaDeveTerOStatusCode200(int statusCode) {
+    @Entao("a resposta quando o produto não está na wishlist deve ter o status code NOT_FOUND {int}")
+    public void aRespostaDeveTerOStatusCode404(int statusCode) {
         assertThat(response.getStatusCode().value()).isEqualTo(statusCode);
     }
 
-    @Entao("a resposta deve estar vazia")
-    public void aRespostaDeveConterOsDadosQueForamCadastradosPreviamente() {
-        assertThat(response.getBody()).isNull();
+    @Entao("a resposta deve conter um PRODUCT_NOT_FOUND_ERROR")
+    public void aRespostaDeveConterUmProductNotFoundError() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ApiResponseDto<ErrorResponseDto> apiResponse = objectMapper.readValue(response.getBody(),
+                objectMapper.getTypeFactory().constructParametricType(ApiResponseDto.class, ErrorResponseDto.class));
+
+        ErrorResponseDto errorResponse = apiResponse.data();
+        assertThat(errorResponse.getCode()).isEqualTo("PRODUCT_NOT_FOUND_ERROR");
+        assertThat(errorResponse.getErrors()).hasSize(1);
+        assertThat(errorResponse.getErrors().get(0).getMessage()).isEqualTo("Product 2 not found in customer wishlist with id: 4");
     }
 }
