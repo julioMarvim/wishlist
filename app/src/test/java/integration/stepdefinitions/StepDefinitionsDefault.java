@@ -1,4 +1,4 @@
-package com.marvim.wishlist.integration.stepdefinitions;
+package integration.stepdefinitions;
 
 import com.marvim.wishlist.WishlistApplication;
 import io.cucumber.spring.CucumberContextConfiguration;
