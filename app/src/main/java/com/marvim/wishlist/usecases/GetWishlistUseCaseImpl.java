@@ -20,6 +20,6 @@ public class GetWishlistUseCaseImpl implements GetWishlistUseCase {
     @Override
     public WishlistResponseInputDto execute(String clientId) {
         logger.info("Starting operation to fetch wishlist for client with ID: {}", clientId);
-        return WishlistToInputMapper.toInputDto(wishlistRepository.findByClientId(clientId));
+        return WishlistToInputMapper.toInputDto(wishlistRepository.findOrCreate(clientId));
     }
 }

@@ -5,7 +5,6 @@ import com.marvim.wishlist.controller.dto.response.ErrorResponseDto;
 import com.marvim.wishlist.input.exception.ProductAlreadyInWishlistException;
 import com.marvim.wishlist.input.exception.ProductNotFoundException;
 import com.marvim.wishlist.input.exception.WishlistLimitExceededException;
-import com.marvim.wishlist.input.exception.WishlistNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -50,14 +49,6 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         errors.add(new ErrorResponseDto.ErrorDetail(null, ex.getMessage()));
         ErrorResponseDto errorResponseDto = new ErrorResponseDto("LIMIT_EXCEEDED", errors);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponseDto<>(errorResponseDto));
-    }
-
-    @ExceptionHandler(WishlistNotFoundException.class)
-    public ResponseEntity<ApiResponseDto<ErrorResponseDto>> handleWishlistNotFoundException(WishlistNotFoundException ex) {
-        List<ErrorResponseDto.ErrorDetail> errors = new ArrayList<>();
-        errors.add(new ErrorResponseDto.ErrorDetail(null, ex.getMessage()));
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto("WISHLIST_NOT_FOUND_ERROR", errors);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponseDto<>(errorResponseDto));
     }
 
     @ExceptionHandler(ProductNotFoundException.class)

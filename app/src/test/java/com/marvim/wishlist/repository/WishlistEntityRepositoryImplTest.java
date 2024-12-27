@@ -7,7 +7,6 @@ import com.marvim.wishlist.repository.mapper.AddProductToEntityMapper;
 import com.marvim.wishlist.input.exception.ProductAlreadyInWishlistException;
 import com.marvim.wishlist.input.exception.ProductNotFoundException;
 import com.marvim.wishlist.input.exception.WishlistLimitExceededException;
-import com.marvim.wishlist.input.exception.WishlistNotFoundException;
 import com.marvim.wishlist.output.dto.request.AddProductRequestOutputDto;
 import com.marvim.wishlist.repository.mongo.SpringDataWishlistRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -98,7 +97,7 @@ class WishlistEntityRepositoryImplTest {
     void shouldFindWishlistByClientId() {
         when(springDataRepository.findByClientId(clientId)).thenReturn(Optional.of(wishlistEntity));
 
-        WishlistResponseOutputDto foundWishlistEntity = wishlistRepository.findByClientId(clientId);
+        WishlistResponseOutputDto foundWishlistEntity = wishlistRepository.findOrCreate(clientId);
 
         assertNotNull(foundWishlistEntity);
         assertEquals(clientId, foundWishlistEntity.getClientId());
@@ -151,12 +150,6 @@ class WishlistEntityRepositoryImplTest {
                 .build();
 
         assertThrows(ProductAlreadyInWishlistException.class, () -> wishlistRepository.save(clientId, productEntityToAdd));
-    }
-
-    @Test
-    void shouldThrowExceptionWhenWishlistNotFound() {
-        when(springDataRepository.findByClientId(clientId)).thenReturn(Optional.empty());
-        assertThrows(WishlistNotFoundException.class, () -> wishlistRepository.checkProductInWishlist(clientId, addProductRequestOutputDto.getId()));
     }
 
     @Test

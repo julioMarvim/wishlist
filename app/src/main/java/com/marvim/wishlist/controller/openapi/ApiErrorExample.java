@@ -59,19 +59,6 @@ public class ApiErrorExample {
             }
             """;
 
-    public static final String WISHLIST_NOT_FOUND_ERROR = """
-            {
-            	"data": {
-            		"code": "WISHLIST_NOT_FOUND_ERROR",
-            		"errors": [
-            			{
-            				"message": "Wishlist not found for cilent: 3"
-            			}
-            		]
-            	}
-            }
-            """;
-
     public static final String PRODUCT_NOT_FOUND_ERROR = """
             {
              	"data": {

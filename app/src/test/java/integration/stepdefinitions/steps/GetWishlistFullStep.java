@@ -1,4 +1,4 @@
-package integration.stepdefinitions;
+package integration.stepdefinitions.steps;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,7 +10,6 @@ import io.cucumber.java.pt.Entao;
 import io.cucumber.java.pt.Quando;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -19,7 +18,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class WishlistStep {
+public class GetWishlistFullStep {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
@@ -53,12 +52,11 @@ public class WishlistStep {
     @Quando("eu faço uma requisição GET para obter a wishlist")
     public void euFacoUmaRequisicaoGETParaObterAWishlist() {
         response = testRestTemplate.getForEntity("/api/v1/wishlist/{clientId}", String.class, clientId);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
-    @Entao("a resposta deve ter o status code {int}")
-    public void aRespostaDeveTerOStatusCode(int statusCode) {
-        assertThat(response.getStatusCode()).isEqualTo(statusCode);
+    @Entao("a resposta quando o usuario tem produtos na wishlist deve ter o status code OK {int}")
+    public void aRespostaDeveTerOStatusCode200(int statusCode) {
+        assertThat(response.getStatusCode().value()).isEqualTo(statusCode);
     }
 
     @Entao("a resposta deve conter os dados que foram cadastrados previamente")
