@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class WishlistStep {
+public class GetWishlistSuccssStep {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
@@ -57,7 +57,7 @@ public class WishlistStep {
     }
 
     @Entao("a resposta deve ter o status code {int}")
-    public void aRespostaDeveTerOStatusCode(int statusCode) {
+    public void aRespostaDeveTerOStatusCode200(int statusCode) {
         assertThat(response.getStatusCode()).isEqualTo(statusCode);
     }
 
@@ -69,5 +69,28 @@ public class WishlistStep {
             assertThat(response.getBody()).contains(product.getName());
             assertThat(response.getBody()).contains(product.getDescription());
         });
+    }
+
+    @Dado("que não existe uma wishlist cadastrada no sistema para o cliente com clientId {string}")
+    public void queNaoExisteUmaWishlistCadastradaNoSistemaParaOClienteComClientId(String clientId) {
+        wishlistRepository.findByClientId(clientId);
+    }
+
+    @Quando("eu faço uma requisição GET para obter a wishlist do cliente com clientId {string}")
+    public void euFacoUmaRequisicaoGETParaObterAWishlistDoClienteComClientId(String clientId) {
+        response = testRestTemplate.getForEntity("/api/v1/wishlist/{clientId}", String.class, clientId);
+    }
+
+    @Entao("a resposta deve ter o status code {int}")
+    public void aRespostaDeveTerOStatusCode404(int statusCode) {
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.valueOf(statusCode));
+    }
+
+    @Entao("a resposta deve conter os seguintes dados:")
+    public void aRespostaDeveConterOsSeguintesDados(io.cucumber.datatable.DataTable dataTable) {
+        var expectedData = dataTable.asMap(String.class, String.class);
+
+        assertThat(response.getBody()).contains("\"code\":\"" + expectedData.get("data.code") + "\"");
+        assertThat(response.getBody()).contains("\"message\":\"" + expectedData.get("data.errors[0].message") + "\"");
     }
 }
