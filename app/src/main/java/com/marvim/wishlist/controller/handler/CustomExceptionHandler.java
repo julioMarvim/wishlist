@@ -47,7 +47,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ApiResponseDto<ErrorResponseDto>> handleWishlistLimitExceededException(WishlistLimitExceededException ex) {
         List<ErrorResponseDto.ErrorDetail> errors = new ArrayList<>();
         errors.add(new ErrorResponseDto.ErrorDetail(null, ex.getMessage()));
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto("LIMIT_EXCEEDED", errors);
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto("WISHLIST_LIMIT_EXCEEDED", errors);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponseDto<>(errorResponseDto));
     }
 

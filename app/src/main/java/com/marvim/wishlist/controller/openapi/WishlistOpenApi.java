@@ -57,7 +57,7 @@ public interface WishlistOpenApi {
                     description = "The customer has exceeded the maximum number of products in the wishlist.",
                     content = @Content(mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = ErrorResponseDto.class)),
-                            examples = {@ExampleObject(value = LIMIT_EXCEEDED_EXAMPLE)})
+                            examples = {@ExampleObject(value = WISHLIST_LIMIT_EXCEEDED_EXAMPLE)})
             )
     })
     @PostMapping("/{clientId}")
