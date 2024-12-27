@@ -3,8 +3,9 @@ package com.marvim.wishlist.input.dto.request;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 @Builder
 public class AddProductRequestInputDto {
     @NotBlank

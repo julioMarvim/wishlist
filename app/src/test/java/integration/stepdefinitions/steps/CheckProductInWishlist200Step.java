@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CheckProductInWishlist200Step {
+public class CheckProductInWishlist200Step extends BaseSteps {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
@@ -49,14 +49,9 @@ public class CheckProductInWishlist200Step {
         products.forEach(product -> wishlistRepository.save(clientId, product));
     }
 
-    @Quando("eu faço uma requisição GET para verificar se o produto de id {string} está na wishlist")
+    @Quando("eu faço uma requisição GET para verificar se o produto de id {string} está na wishlist do clientId 2")
     public void euFacoUmaRequisicaoGETParaObterAWishlist(String productId) {
-        response = testRestTemplate.getForEntity(
-                "/api/v1/wishlist/{clientId}/{productId}/exists",
-                String.class,
-                clientId,
-                productId
-        );
+        response = verificarSeProdutoEstaNaWishlist(clientId, productId);
     }
 
 

@@ -10,7 +10,6 @@ import java.util.List;
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class WishlistResponseInputDto {
     private String id;
     private String clientId;

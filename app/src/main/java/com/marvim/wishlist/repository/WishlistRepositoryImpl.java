@@ -1,6 +1,7 @@
 package com.marvim.wishlist.repository;
 
 import com.marvim.wishlist.output.dto.response.WishlistResponseOutputDto;
+import com.marvim.wishlist.repository.entity.ProductEntity;
 import com.marvim.wishlist.repository.entity.WishlistEntity;
 import com.marvim.wishlist.repository.mapper.AddProductToEntityMapper;
 import com.marvim.wishlist.input.exception.ProductAlreadyInWishlistException;
@@ -33,7 +34,8 @@ public class WishlistRepositoryImpl implements WishlistRepository {
                 .orElseGet(() -> WishlistFactory.createNew(clientId));
 
         wishlistValidations(addProductRequestOutputDto, wishlistEntity);
-        wishlistEntity.addProduct(AddProductToEntityMapper.toEntity(addProductRequestOutputDto));
+        ProductEntity productEntity = AddProductToEntityMapper.toEntity(addProductRequestOutputDto);
+        wishlistEntity.addProduct(productEntity);
         repository.save(wishlistEntity);
         logger.info("Wishlist with ID: {} successfully updated in database for customer with ID: {}", wishlistEntity.getId(), wishlistEntity.getClientId());
     }

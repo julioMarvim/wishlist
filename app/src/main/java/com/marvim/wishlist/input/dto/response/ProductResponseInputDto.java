@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class ProductResponseInputDto {
     private String id;
     private String name;
