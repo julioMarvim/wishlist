@@ -6,10 +6,10 @@ import com.marvim.wishlist.repository.mapper.AddProductToEntityMapper;
 import com.marvim.wishlist.input.exception.ProductAlreadyInWishlistException;
 import com.marvim.wishlist.input.exception.ProductNotFoundException;
 import com.marvim.wishlist.input.exception.WishlistLimitExceededException;
-import com.marvim.wishlist.input.exception.WishlistNotFoundException;
 import com.marvim.wishlist.repository.entity.WishlistFactory;
 import com.marvim.wishlist.output.WishlistRepository;
 import com.marvim.wishlist.output.dto.request.AddProductRequestOutputDto;
+import com.marvim.wishlist.repository.mapper.WishlistOutputToEntityMapper;
 import com.marvim.wishlist.repository.mapper.WishlistToOutputMapper;
 import com.marvim.wishlist.repository.mongo.SpringDataWishlistRepository;
 import lombok.RequiredArgsConstructor;
@@ -46,33 +46,29 @@ public class WishlistRepositoryImpl implements WishlistRepository {
     @Override
     public void remove(String clientId, String productId) {
         logger.info("Starting database operation to remove product with ID: {} in wishlist from client with ID: {}", productId, clientId);
-        WishlistEntity wishlistEntity = getWishlist(clientId);
+        WishlistResponseOutputDto wishlistDto = findOrCreate(clientId);
+        WishlistEntity wishlistEntity = WishlistOutputToEntityMapper.toOutputDto(wishlistDto);
         wishlistEntity.removeProduct(productId);
         repository.save(wishlistEntity);
         logger.info("Success in removing product with ID: {} from wishlist with ID: {} from customer with ID: {}", productId, wishlistEntity.getId(), wishlistEntity.getClientId());
     }
 
-    @Override
-    public WishlistResponseOutputDto findByClientId(String clientId) {
-        logger.info("Starting database operation to find wishlist for client with ID: {}", clientId);
-        WishlistResponseOutputDto wishlistResponseOutputDto = WishlistToOutputMapper.toOutputDto(getWishlist(clientId));
-        logger.info("Successfully retrieved wishlist with ID: {} from customer with ID: {}", wishlistResponseOutputDto.getId(), clientId);
-        return wishlistResponseOutputDto;
+    public WishlistResponseOutputDto findOrCreate(String clientId) {
+        return repository.findByClientId(clientId)
+                .map(WishlistToOutputMapper::toOutputDto)
+                .orElseGet(() -> {
+                    logger.info("No wishlist found for client ID: {}. Creating a new wishlist.", clientId);
+                    WishlistEntity newWishlistEntity = WishlistFactory.createNew(clientId);
+                    repository.save(newWishlistEntity);
+                    return WishlistToOutputMapper.toOutputDto(newWishlistEntity);
+                });
     }
 
     @Override
     public void checkProductInWishlist(String clientId, String productId) {
         logger.info("Starting database operation to check if product with ID: {} exists in wishlist for client with ID: {}", productId, clientId);
-        WishlistEntity wishlistEntity = getWishlist(clientId);
-        validateProductInWhishlist(clientId, productId, wishlistEntity);
-    }
-
-    private WishlistEntity getWishlist(String clientId) {
-        return repository.findByClientId(clientId)
-                .orElseThrow(() -> {
-                    logger.error("Wishlist for client with ID: {} not found", clientId);
-                    return new WishlistNotFoundException(clientId);
-                });
+        WishlistResponseOutputDto wishlistDto = this.findOrCreate(clientId);
+        validateProductInWhishlist(clientId, productId, wishlistDto);
     }
 
     private void validateWishlistLimit(WishlistEntity wishlistEntity) {
@@ -91,8 +87,8 @@ public class WishlistRepositoryImpl implements WishlistRepository {
         }
     }
 
-    private static void validateProductInWhishlist(String clientId, String productId, WishlistEntity wishlistEntity) {
-        if (wishlistEntity.getProducts().stream().noneMatch(product -> product.getId().equals(productId))) {
+    private static void validateProductInWhishlist(String clientId, String productId, WishlistResponseOutputDto wishlistDto) {
+        if (wishlistDto.getProducts().stream().noneMatch(product -> product.getId().equals(productId))) {
             logger.error("ProductEntity with ID: {} not found in wishlist for client with ID: {}", productId, clientId);
             throw new ProductNotFoundException(clientId, productId);
         }

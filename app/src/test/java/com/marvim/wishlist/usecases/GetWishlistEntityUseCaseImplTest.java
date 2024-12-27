@@ -52,7 +52,7 @@ public class GetWishlistEntityUseCaseImplTest {
 
     @Test
     void shouldReturnWishlist() {
-        when(wishlistRepository.findByClientId("client-id")).thenReturn(wishlistResponseOutputDto);
+        when(wishlistRepository.findOrCreate("client-id")).thenReturn(wishlistResponseOutputDto);
 
         WishlistResponseInputDto result = useCase.execute("client-id");
 
@@ -62,6 +62,6 @@ public class GetWishlistEntityUseCaseImplTest {
         assertEquals("product-id-1", result.getProducts().get(0).getId());
         assertEquals("product-id-2", result.getProducts().get(1).getId());
 
-        verify(wishlistRepository, times(1)).findByClientId("client-id");
+        verify(wishlistRepository, times(1)).findOrCreate("client-id");
     }
 }
