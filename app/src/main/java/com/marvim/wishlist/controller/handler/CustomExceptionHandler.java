@@ -59,13 +59,6 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponseDto<>(errorResponseDto));
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ApiResponseDto<ErrorResponseDto>> handleIllegalArgumentException(IllegalArgumentException ex) {
-        List<ErrorResponseDto.ErrorDetail> errors = List.of(new ErrorResponseDto.ErrorDetail(null, ex.getMessage()));
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto("INVALID_ARGUMENT", errors);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDto<>(errorResponseDto));
-    }
-
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<ApiResponseDto<ErrorResponseDto>> handleIllegalStateException(IllegalStateException ex) {
         List<ErrorResponseDto.ErrorDetail> errors = List.of(new ErrorResponseDto.ErrorDetail(null, ex.getMessage()));
