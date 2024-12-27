@@ -11,12 +11,12 @@ import java.util.stream.Collectors;
 public class WishlistToResponseMapper {
 
     public static WishlistResponseDto toResponse(WishlistResponseInputDto wishlistResponseInputDto) {
-        List<ProductResponseDto> productResponsDtos = mapProductsToProductResponses(wishlistResponseInputDto.getProducts());
-        return WishlistResponseDto.builder()
-                .id(wishlistResponseInputDto.getId())
-                .clientId(wishlistResponseInputDto.getClientId())
-                .products(productResponsDtos)
-                .build();
+        List<ProductResponseDto> productResponseDtos = mapProductsToProductResponses(wishlistResponseInputDto.getProducts());
+        return new WishlistResponseDto(
+                wishlistResponseInputDto.getId(),
+                wishlistResponseInputDto.getClientId(),
+                productResponseDtos
+        );
     }
 
     private static List<ProductResponseDto> mapProductsToProductResponses(List<ProductResponseInputDto> productResponseInputDtos) {
