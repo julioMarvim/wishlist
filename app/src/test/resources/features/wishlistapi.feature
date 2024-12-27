@@ -12,4 +12,3 @@ Funcionalidade: Obter a Wishlist de um cliente
     Quando eu faço uma requisição GET para obter a wishlist
     Então a resposta deve ter o status code 200
     E a resposta deve conter os dados que foram cadastrados previamente
-

@@ -57,7 +57,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         List<ErrorResponseDto.ErrorDetail> errors = new ArrayList<>();
         errors.add(new ErrorResponseDto.ErrorDetail(null, ex.getMessage()));
         ErrorResponseDto errorResponseDto = new ErrorResponseDto("WISHLIST_NOT_FOUND_ERROR", errors);
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponseDto<>(errorResponseDto));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponseDto<>(errorResponseDto));
     }
 
     @ExceptionHandler(ProductNotFoundException.class)
@@ -65,7 +65,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         List<ErrorResponseDto.ErrorDetail> errors = new ArrayList<>();
         errors.add(new ErrorResponseDto.ErrorDetail(null, ex.getMessage()));
         ErrorResponseDto errorResponseDto = new ErrorResponseDto("PRODUCT_NOT_FOUND_ERROR", errors);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDto<>(errorResponseDto));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponseDto<>(errorResponseDto));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
