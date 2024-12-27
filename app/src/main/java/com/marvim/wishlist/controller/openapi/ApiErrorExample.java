@@ -46,10 +46,10 @@ public class ApiErrorExample {
             }
             """;
 
-    public static final String LIMIT_EXCEEDED_EXAMPLE = """
+    public static final String WISHLIST_LIMIT_EXCEEDED_EXAMPLE = """
             {
             	"data": {
-            		"code": "LIMIT_EXCEEDED",
+            		"code": "WISHLIST_LIMIT_EXCEEDED",
             		"errors": [
             			{
             				"message": "Customer ID 2 has exceeded the maximum number of products in the wishlist."

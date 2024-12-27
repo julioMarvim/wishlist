@@ -47,7 +47,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ApiResponseDto<ErrorResponseDto>> handleWishlistLimitExceededException(WishlistLimitExceededException ex) {
         List<ErrorResponseDto.ErrorDetail> errors = new ArrayList<>();
         errors.add(new ErrorResponseDto.ErrorDetail(null, ex.getMessage()));
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto("LIMIT_EXCEEDED", errors);
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto("WISHLIST_LIMIT_EXCEEDED", errors);
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponseDto<>(errorResponseDto));
     }
 
@@ -59,20 +59,6 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponseDto<>(errorResponseDto));
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ApiResponseDto<ErrorResponseDto>> handleIllegalArgumentException(IllegalArgumentException ex) {
-        List<ErrorResponseDto.ErrorDetail> errors = List.of(new ErrorResponseDto.ErrorDetail(null, ex.getMessage()));
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto("INVALID_ARGUMENT", errors);
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDto<>(errorResponseDto));
-    }
-
-    @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<ApiResponseDto<ErrorResponseDto>> handleIllegalStateException(IllegalStateException ex) {
-        List<ErrorResponseDto.ErrorDetail> errors = List.of(new ErrorResponseDto.ErrorDetail(null, ex.getMessage()));
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto("ILLEGAL_STATE", errors);
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponseDto<>(errorResponseDto));
-    }
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponseDto<?>> handleException(Exception ex) {
         List<ErrorResponseDto.ErrorDetail> errors = List.of(
@@ -81,5 +67,4 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         ErrorResponseDto errorResponseDto = new ErrorResponseDto("INTERNAL_SERVER_ERROR", errors);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponseDto<>(errorResponseDto));
     }
-
 }
