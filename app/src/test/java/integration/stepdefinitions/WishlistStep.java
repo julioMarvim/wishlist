@@ -1,4 +1,4 @@
-package com.marvim.wishlist.integration.stepdefinitions;
+package integration.stepdefinitions;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

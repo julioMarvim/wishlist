@@ -1,4 +1,4 @@
-package com.marvim.wishlist.integration.stepdefinitions;
+package integration.stepdefinitions;
 
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
