@@ -59,13 +59,6 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponseDto<>(errorResponseDto));
     }
 
-    @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<ApiResponseDto<ErrorResponseDto>> handleIllegalStateException(IllegalStateException ex) {
-        List<ErrorResponseDto.ErrorDetail> errors = List.of(new ErrorResponseDto.ErrorDetail(null, ex.getMessage()));
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto("ILLEGAL_STATE", errors);
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponseDto<>(errorResponseDto));
-    }
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponseDto<?>> handleException(Exception ex) {
         List<ErrorResponseDto.ErrorDetail> errors = List.of(
@@ -74,5 +67,4 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         ErrorResponseDto errorResponseDto = new ErrorResponseDto("INTERNAL_SERVER_ERROR", errors);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponseDto<>(errorResponseDto));
     }
-
 }
