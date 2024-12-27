@@ -78,14 +78,14 @@ public interface WishlistOpenApi {
                     content = @Content(mediaType = "application/json")
             ),
             @ApiResponse(
-                    responseCode = "409",
+                    responseCode = "404",
                     description = "Wishlist not found for cilent.",
                     content = @Content(mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = ErrorResponseDto.class)),
                             examples = {@ExampleObject(value = WISHLIST_NOT_FOUND_ERROR)})
             ),
             @ApiResponse(
-                    responseCode = "409",
+                    responseCode = "404",
                     description = "Product not found for cilent wishlist.",
                     content = @Content(mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = ErrorResponseDto.class)),
@@ -117,7 +117,7 @@ public interface WishlistOpenApi {
                             schema = @Schema(implementation = WishlistResponseDto.class))
             ),
             @ApiResponse(
-                    responseCode = "409",
+                    responseCode = "404",
                     description = "Wishlist not found for cilent.",
                     content = @Content(mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = ErrorResponseDto.class)),
@@ -147,14 +147,14 @@ public interface WishlistOpenApi {
                     content = @Content(mediaType = "application/json")
             ),
             @ApiResponse(
-                    responseCode = "409",
+                    responseCode = "404",
                     description = "Wishlist not found for cilent.",
                     content = @Content(mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = ErrorResponseDto.class)),
                             examples = {@ExampleObject(value = WISHLIST_NOT_FOUND_ERROR)})
             ),
             @ApiResponse(
-                    responseCode = "409",
+                    responseCode = "404",
                     description = "Product not found for cilent wishlist.",
                     content = @Content(mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = ErrorResponseDto.class)),

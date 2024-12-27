@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marvim.wishlist.output.WishlistRepository;
 import com.marvim.wishlist.output.dto.request.AddProductRequestOutputDto;
-import com.marvim.wishlist.output.dto.response.ProductResponseOutputDto;
-import com.marvim.wishlist.repository.entity.ProductEntity;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Entao;
@@ -60,7 +58,7 @@ public class WishlistStep {
 
     @Entao("a resposta deve ter o status code {int}")
     public void aRespostaDeveTerOStatusCode(int statusCode) {
-        assertThat(response.getStatusCodeValue()).isEqualTo(statusCode);
+        assertThat(response.getStatusCode()).isEqualTo(statusCode);
     }
 
     @Entao("a resposta deve conter os dados que foram cadastrados previamente")
