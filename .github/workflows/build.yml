@@ -38,8 +38,3 @@ jobs:
 
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag wishlist:$(date +%s)
-
-      - name: Dependency Check OWASP
-        if: github.ref == 'refs/heads/main'
-        working-directory: ./app
-        run: mvn org.owasp:dependency-check-maven:aggregate

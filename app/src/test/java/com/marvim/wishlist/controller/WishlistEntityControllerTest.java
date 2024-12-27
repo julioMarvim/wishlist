@@ -119,9 +119,9 @@ public class WishlistEntityControllerTest {
                     ApiResponseDto<WishlistResponseDto> response = new ObjectMapper()
                             .readValue(content, new TypeReference<>() {});
 
-                    assertThat(response.getData().getProducts()).hasSize(2);
-                    assertThat(response.getData().getProducts().get(0).getId()).isEqualTo("product-id-1");
-                    assertThat(response.getData().getProducts().get(1).getId()).isEqualTo("product-id-2");
+                    assertThat(response.data().products()).hasSize(2);
+                    assertThat(response.data().products().get(0).id()).isEqualTo("product-id-1");
+                    assertThat(response.data().products().get(1).id()).isEqualTo("product-id-2");
                 });
 
         verify(getWishlistUseCase).execute(clientId);
