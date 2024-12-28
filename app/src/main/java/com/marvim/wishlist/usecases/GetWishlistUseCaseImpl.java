@@ -1,7 +1,7 @@
 package com.marvim.wishlist.usecases;
 
 import com.marvim.wishlist.input.GetWishlistUseCase;
-import com.marvim.wishlist.input.dto.response.WishlistResponseInputDto;
+import com.marvim.wishlist.input.dto.response.WishlistResponseInput;
 import com.marvim.wishlist.output.WishlistRepository;
 import com.marvim.wishlist.usecases.mapper.WishlistToInputMapper;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class GetWishlistUseCaseImpl implements GetWishlistUseCase {
     private final WishlistRepository wishlistRepository;
 
     @Override
-    public WishlistResponseInputDto execute(String clientId) {
+    public WishlistResponseInput execute(String clientId) {
         logger.info("Starting operation to fetch wishlist for client with ID: {}", clientId);
         return WishlistToInputMapper.toInputDto(wishlistRepository.findOrCreate(clientId));
     }

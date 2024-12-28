@@ -1,9 +1,8 @@
 package com.marvim.wishlist.usecases;
 
-import com.marvim.wishlist.input.dto.request.AddProductRequestInputDto;
+import com.marvim.wishlist.input.dto.request.AddProductRequestInput;
 import com.marvim.wishlist.output.WishlistRepository;
-import com.marvim.wishlist.output.dto.request.AddProductRequestOutputDto;
-import com.marvim.wishlist.usecases.AddProductToWishlistUseCaseImpl;
+import com.marvim.wishlist.output.dto.request.AddProductRequestOutput;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -26,7 +25,7 @@ class AddProductEntityToWishlistEntityUseCaseImplTest {
     @Test
     void shouldSaveProductWhenExecutingUseCase() {
         String clientId = "client-id";
-        AddProductRequestInputDto productyEntity = AddProductRequestInputDto.builder()
+        AddProductRequestInput productyEntity = AddProductRequestInput.builder()
                 .id("productyEntity-id")
                 .name("Garrafa")
                 .description("Garrafa de café")
@@ -35,7 +34,7 @@ class AddProductEntityToWishlistEntityUseCaseImplTest {
         useCase.execute(clientId, productyEntity);
 
         ArgumentCaptor<String> clientIdCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<AddProductRequestOutputDto> productCaptor = ArgumentCaptor.forClass(AddProductRequestOutputDto.class);
+        ArgumentCaptor<AddProductRequestOutput> productCaptor = ArgumentCaptor.forClass(AddProductRequestOutput.class);
         verify(wishlistRepository).save(clientIdCaptor.capture(), productCaptor.capture());
 
         assertEquals(clientId, clientIdCaptor.getValue());

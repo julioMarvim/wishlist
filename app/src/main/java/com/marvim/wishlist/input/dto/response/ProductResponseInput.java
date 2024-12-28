@@ -3,15 +3,12 @@ package com.marvim.wishlist.input.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Getter
 @Builder
 @AllArgsConstructor
-public class WishlistResponseInputDto {
+public class ProductResponseInput {
     private String id;
-    private String clientId;
-    private List<ProductResponseInputDto> products;
+    private String name;
+    private String description;
 }

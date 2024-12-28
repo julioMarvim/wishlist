@@ -1,14 +1,13 @@
-package com.marvim.wishlist.input.dto.response;
+package com.marvim.wishlist.output.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
 @AllArgsConstructor
-public class ProductResponseInputDto {
+public class ProductResponseOutput {
     private String id;
     private String name;
     private String description;

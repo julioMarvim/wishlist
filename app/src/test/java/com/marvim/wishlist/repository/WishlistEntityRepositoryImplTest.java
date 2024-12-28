@@ -1,13 +1,13 @@
 package com.marvim.wishlist.repository;
 
-import com.marvim.wishlist.output.dto.response.WishlistResponseOutputDto;
+import com.marvim.wishlist.output.dto.response.WishlistResponseOutput;
 import com.marvim.wishlist.repository.entity.ProductEntity;
 import com.marvim.wishlist.repository.entity.WishlistEntity;
 import com.marvim.wishlist.repository.mapper.AddProductToEntityMapper;
 import com.marvim.wishlist.input.exception.ProductAlreadyInWishlistException;
 import com.marvim.wishlist.input.exception.ProductNotFoundException;
 import com.marvim.wishlist.input.exception.WishlistLimitExceededException;
-import com.marvim.wishlist.output.dto.request.AddProductRequestOutputDto;
+import com.marvim.wishlist.output.dto.request.AddProductRequestOutput;
 import com.marvim.wishlist.repository.mongo.SpringDataWishlistRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,12 +34,12 @@ class WishlistEntityRepositoryImplTest {
     private WishlistRepositoryImpl wishlistRepository;
 
     private WishlistEntity wishlistEntity;
-    private AddProductRequestOutputDto addProductRequestOutputDto;
+    private AddProductRequestOutput addProductRequestOutput;
     private final String clientId = "client-id";
 
     @BeforeEach
     void setUp() {
-        addProductRequestOutputDto = AddProductRequestOutputDto.builder()
+        addProductRequestOutput = AddProductRequestOutput.builder()
                 .id("1")
                 .name("Garrafa")
                 .description("Garrafa de café")
@@ -48,10 +48,11 @@ class WishlistEntityRepositoryImplTest {
         wishlistEntity = WishlistEntity.builder()
                 .id("wishlistEntity-id")
                 .clientId(clientId)
-                .products(List.of(AddProductToEntityMapper.toEntity(addProductRequestOutputDto)))
+                .products(List.of(AddProductToEntityMapper.toEntity(addProductRequestOutput)))
                 .build();
 
-        wishlistRepository = new WishlistRepositoryImpl(springDataRepository);
+        int maxProducts = 12;
+        wishlistRepository = new WishlistRepositoryImpl(springDataRepository, maxProducts);
     }
 
     @Test
@@ -65,13 +66,13 @@ class WishlistEntityRepositoryImplTest {
         when(springDataRepository.findByClientId(clientId)).thenReturn(Optional.of(wishlistEntity));
         when(springDataRepository.save(wishlistEntity)).thenReturn(wishlistEntity);
 
-        wishlistRepository.save(clientId, addProductRequestOutputDto);
+        wishlistRepository.save(clientId, addProductRequestOutput);
 
         ArgumentCaptor<WishlistEntity> wishlistCaptor = ArgumentCaptor.forClass(WishlistEntity.class);
         verify(springDataRepository, times(1)).save(wishlistCaptor.capture());
 
         List<ProductEntity> capturedProducts = wishlistCaptor.getValue().getProducts();
-        assertTrue(capturedProducts.contains(AddProductToEntityMapper.toEntity(addProductRequestOutputDto)));
+        assertTrue(capturedProducts.contains(AddProductToEntityMapper.toEntity(addProductRequestOutput)));
     }
 
     @Test
@@ -79,25 +80,25 @@ class WishlistEntityRepositoryImplTest {
         wishlistEntity = WishlistEntity.builder()
                 .id("wishlistEntity-id")
                 .clientId(clientId)
-                .products(new ArrayList<>(List.of(AddProductToEntityMapper.toEntity(addProductRequestOutputDto))))
+                .products(new ArrayList<>(List.of(AddProductToEntityMapper.toEntity(addProductRequestOutput))))
                 .build();
 
         when(springDataRepository.findByClientId(clientId)).thenReturn(Optional.of(wishlistEntity));
 
-        wishlistRepository.remove(clientId, addProductRequestOutputDto.getId());
+        wishlistRepository.remove(clientId, addProductRequestOutput.getId());
 
         ArgumentCaptor<WishlistEntity> wishlistCaptor = ArgumentCaptor.forClass(WishlistEntity.class);
         verify(springDataRepository, times(1)).save(wishlistCaptor.capture());
 
         List<ProductEntity> capturedProducts = wishlistCaptor.getValue().getProducts();
-        assertFalse(capturedProducts.contains(AddProductToEntityMapper.toEntity(addProductRequestOutputDto)));
+        assertFalse(capturedProducts.contains(AddProductToEntityMapper.toEntity(addProductRequestOutput)));
     }
 
     @Test
     void shouldFindWishlistByClientId() {
         when(springDataRepository.findByClientId(clientId)).thenReturn(Optional.of(wishlistEntity));
 
-        WishlistResponseOutputDto foundWishlistEntity = wishlistRepository.findOrCreate(clientId);
+        WishlistResponseOutput foundWishlistEntity = wishlistRepository.findOrCreate(clientId);
 
         assertNotNull(foundWishlistEntity);
         assertEquals(clientId, foundWishlistEntity.getClientId());
@@ -124,7 +125,7 @@ class WishlistEntityRepositoryImplTest {
 
         when(springDataRepository.findByClientId(clientId)).thenReturn(Optional.of(wishlistEntity));
 
-        AddProductRequestOutputDto productEntityToAdd = AddProductRequestOutputDto.builder()
+        AddProductRequestOutput productEntityToAdd = AddProductRequestOutput.builder()
                 .id("21")
                 .name("New ProductEntity")
                 .description("New ProductEntity Description")
@@ -138,12 +139,12 @@ class WishlistEntityRepositoryImplTest {
         wishlistEntity = WishlistEntity.builder()
                 .id("wishlistEntity-id")
                 .clientId(clientId)
-                .products(new ArrayList<>(List.of(AddProductToEntityMapper.toEntity(addProductRequestOutputDto))))
+                .products(new ArrayList<>(List.of(AddProductToEntityMapper.toEntity(addProductRequestOutput))))
                 .build();
 
         when(springDataRepository.findByClientId(clientId)).thenReturn(Optional.of(wishlistEntity));
 
-        AddProductRequestOutputDto productEntityToAdd = AddProductRequestOutputDto.builder()
+        AddProductRequestOutput productEntityToAdd = AddProductRequestOutput.builder()
                 .id("1")
                 .name("Garrafa")
                 .description("Garrafa de café")
@@ -161,7 +162,7 @@ class WishlistEntityRepositoryImplTest {
     @Test
     void shouldCheckProductInWishlistSuccessfully() {
         when(springDataRepository.findByClientId(clientId)).thenReturn(Optional.of(wishlistEntity));
-        assertDoesNotThrow(() -> wishlistRepository.checkProductInWishlist(clientId, addProductRequestOutputDto.getId()));
+        assertDoesNotThrow(() -> wishlistRepository.checkProductInWishlist(clientId, addProductRequestOutput.getId()));
     }
 
 

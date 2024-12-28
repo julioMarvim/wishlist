@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class AddProductRequestOutputDto {
+public class AddProductRequestOutput {
     private String id;
     private String name;
     private String description;

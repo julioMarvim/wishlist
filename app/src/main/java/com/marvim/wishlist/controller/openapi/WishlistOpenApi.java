@@ -1,16 +1,15 @@
 package com.marvim.wishlist.controller.openapi;
 
 import com.marvim.wishlist.controller.dto.request.AddProductRequest;
-import com.marvim.wishlist.controller.dto.response.ApiResponseDto;
-import com.marvim.wishlist.controller.dto.response.ErrorResponseDto;
-import com.marvim.wishlist.controller.dto.response.WishlistResponseDto;
+import com.marvim.wishlist.controller.dto.response.ApiResponse;
+import com.marvim.wishlist.controller.dto.response.ErrorResponse;
+import com.marvim.wishlist.controller.dto.response.WishlistRespons;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -26,37 +25,37 @@ public interface WishlistOpenApi {
             description = "This endpoint allows the client to add a product to their wishlist. It accepts a clientId and product information."
     )
     @ApiResponses(value = {
-            @ApiResponse(
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "201",
                     description = "Product insertion completed successfully.",
                     content = @Content(mediaType = "application/json")
             ),
-            @ApiResponse(
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "500",
                     description = "An internal error occurred while running the microservice.",
                     content = @Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = ErrorResponseDto.class)),
+                            array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)),
                             examples = {@ExampleObject(value = ERROR_RESPONSE_EXAMPLE)})
             ),
-            @ApiResponse(
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "400",
                     description = "The request is invalid due to bean validation errors.",
                     content = @Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = ErrorResponseDto.class)),
+                            array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)),
                             examples = {@ExampleObject(value = VALIDATION_FAILED_EXAMPLE)})
             ),
-            @ApiResponse(
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "409",
                     description = "Product already exists in the customer wishlist.",
                     content = @Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = ErrorResponseDto.class)),
+                            array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)),
                             examples = {@ExampleObject(value = PRODUCT_ALREADY_IN_WISHLIST_EXAMPLE)})
             ),
-            @ApiResponse(
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "409",
                     description = "The customer has exceeded the maximum number of products in the wishlist.",
                     content = @Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = ErrorResponseDto.class)),
+                            array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)),
                             examples = {@ExampleObject(value = WISHLIST_LIMIT_EXCEEDED_EXAMPLE)})
             )
     })
@@ -72,28 +71,28 @@ public interface WishlistOpenApi {
             description = "This endpoint allows the client to remove a product from their wishlist."
     )
     @ApiResponses(value = {
-            @ApiResponse(
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "204",
                     description = "Product removal completed successfully.",
                     content = @Content(mediaType = "application/json")
             ),
-            @ApiResponse(
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "404",
                     description = "Product not found for cilent wishlist.",
                     content = @Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = ErrorResponseDto.class)),
+                            array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)),
                             examples = {@ExampleObject(value = PRODUCT_NOT_FOUND_ERROR)})
             ),
-            @ApiResponse(
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "500",
                     description = "An internal error occurred while running the microservice.",
                     content = @Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = ErrorResponseDto.class)),
+                            array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)),
                             examples = {@ExampleObject(value = ERROR_RESPONSE_EXAMPLE)})
             )
     })
     @DeleteMapping("/{clientId}/{productId}")
-    ResponseEntity<ApiResponseDto<Void>> remove(
+    ResponseEntity<ApiResponse<Void>> remove(
             @Parameter(description = "Client ID", required = true) @PathVariable("clientId") String clientId,
             @Parameter(description = "Product ID", required = true) @PathVariable("productId") String productId);
 
@@ -103,22 +102,22 @@ public interface WishlistOpenApi {
             description = "This endpoint allows the client to retrieve their wishlist."
     )
     @ApiResponses(value = {
-            @ApiResponse(
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "200",
                     description = "Wishlist retrieved successfully.",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = WishlistResponseDto.class))
+                            schema = @Schema(implementation = WishlistRespons.class))
             ),
-            @ApiResponse(
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "500",
                     description = "An internal error occurred while running the microservice.",
                     content = @Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = ErrorResponseDto.class)),
+                            array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)),
                             examples = {@ExampleObject(value = ERROR_RESPONSE_EXAMPLE)})
             )
     })
     @GetMapping("/{clientId}")
-    ResponseEntity<ApiResponseDto<WishlistResponseDto>> getWishlist(
+    ResponseEntity<ApiResponse<WishlistRespons>> getWishlist(
             @Parameter(description = "Client ID", required = true) @PathVariable("clientId") String clientId);
 
     @Operation(
@@ -127,28 +126,28 @@ public interface WishlistOpenApi {
             description = "This endpoint allows the client to check if a product is already in their wishlist."
     )
     @ApiResponses(value = {
-            @ApiResponse(
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "200",
                     description = "Product exists in the wishlist.",
                     content = @Content(mediaType = "application/json")
             ),
-            @ApiResponse(
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "404",
                     description = "Product not found for cilent wishlist.",
                     content = @Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = ErrorResponseDto.class)),
+                            array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)),
                             examples = {@ExampleObject(value = PRODUCT_NOT_FOUND_ERROR)})
             ),
-            @ApiResponse(
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "500",
                     description = "An internal error occurred while running the microservice.",
                     content = @Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = ErrorResponseDto.class)),
+                            array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class)),
                             examples = {@ExampleObject(value = ERROR_RESPONSE_EXAMPLE)})
             )
     })
     @GetMapping("/{clientId}/{productId}/exists")
-    ResponseEntity<ApiResponseDto<Void>> checkProductInWishlist(
+    ResponseEntity<ApiResponse<Void>> checkProductInWishlist(
             @Parameter(description = "Client ID", required = true) @PathVariable("clientId") String clientId,
             @Parameter(description = "Product ID", required = true) @PathVariable("productId") String productId);
 }

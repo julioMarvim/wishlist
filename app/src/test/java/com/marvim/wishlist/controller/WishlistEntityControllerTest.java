@@ -3,15 +3,15 @@ package com.marvim.wishlist.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marvim.wishlist.controller.dto.request.AddProductRequest;
-import com.marvim.wishlist.controller.dto.response.ApiResponseDto;
-import com.marvim.wishlist.controller.dto.response.WishlistResponseDto;
-import com.marvim.wishlist.input.dto.response.ProductResponseInputDto;
-import com.marvim.wishlist.input.dto.response.WishlistResponseInputDto;
+import com.marvim.wishlist.controller.dto.response.ApiResponse;
+import com.marvim.wishlist.controller.dto.response.WishlistRespons;
+import com.marvim.wishlist.input.dto.response.ProductResponseInput;
+import com.marvim.wishlist.input.dto.response.WishlistResponseInput;
 import com.marvim.wishlist.input.AddProductToWishlistUseCase;
 import com.marvim.wishlist.input.CheckProductInWishlistUseCase;
 import com.marvim.wishlist.input.GetWishlistUseCase;
 import com.marvim.wishlist.input.RemoveProductFromWishlistUseCase;
-import com.marvim.wishlist.input.dto.request.AddProductRequestInputDto;
+import com.marvim.wishlist.input.dto.request.AddProductRequestInput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,31 +47,31 @@ public class WishlistEntityControllerTest {
     private CheckProductInWishlistUseCase checkProductInWishlistUseCase;
 
     @InjectMocks
-    private WishlistController wishlistController;
+    private WishlistControllerImpl wishlistControllerImpl;
 
     private MockMvc mockMvc;
-    private WishlistResponseInputDto wishlistResponse;
+    private WishlistResponseInput wishlistResponse;
 
     @BeforeEach
     void setUp() {
-        ProductResponseInputDto productEntity1 = ProductResponseInputDto.builder()
+        ProductResponseInput productEntity1 = ProductResponseInput.builder()
                 .id("product-id-1")
                 .name("Garrafa")
                 .description("Garrafa de café")
                 .build();
 
-        ProductResponseInputDto productEntity2 = ProductResponseInputDto.builder()
+        ProductResponseInput productEntity2 = ProductResponseInput.builder()
                 .id("product-id-2")
                 .name("Caneca")
                 .description("Caneca térmica")
                 .build();
 
-        wishlistResponse = WishlistResponseInputDto.builder()
+        wishlistResponse = WishlistResponseInput.builder()
                 .clientId("client-id")
                 .products(List.of(productEntity1, productEntity2))
                 .build();
 
-        mockMvc = MockMvcBuilders.standaloneSetup(wishlistController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(wishlistControllerImpl).build();
     }
 
     @Test
@@ -88,7 +88,7 @@ public class WishlistEntityControllerTest {
                         .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(status().isCreated());
 
-        ArgumentCaptor<AddProductRequestInputDto> productCaptor = ArgumentCaptor.forClass(AddProductRequestInputDto.class);
+        ArgumentCaptor<AddProductRequestInput> productCaptor = ArgumentCaptor.forClass(AddProductRequestInput.class);
         verify(addProductToWishlistUseCase, times(1)).execute(eq(clientId), productCaptor.capture());
     }
 
@@ -116,7 +116,7 @@ public class WishlistEntityControllerTest {
                 .andExpect(result -> {
                     String content = result.getResponse().getContentAsString();
 
-                    ApiResponseDto<WishlistResponseDto> response = new ObjectMapper()
+                    ApiResponse<WishlistRespons> response = new ObjectMapper()
                             .readValue(content, new TypeReference<>() {});
 
                     assertThat(response.data().products()).hasSize(2);

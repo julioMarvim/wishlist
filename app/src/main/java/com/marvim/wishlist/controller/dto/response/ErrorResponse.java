@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ErrorResponseDto {
+public class ErrorResponse {
 
     private String code;
     private List<ErrorDetail> errors;
