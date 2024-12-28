@@ -1,7 +1,11 @@
 # Wishlist API
 
-A Wishlist API permite aos usuários criar e gerenciar listas de desejos, com funcionalidades para adicionar, remover e
-visualizar itens nas listas.
+A API tem como objetivo fornecer um serviço HTTP para gerenciar a funcionalidade de Wishlist (lista de desejos) de um cliente. Ela permite realizar as seguintes operações:
+
+- **Adicionar um produto à Wishlist**: O cliente pode adicionar um produto à sua lista de desejos.
+- **Remover um produto da Wishlist**: O cliente pode remover um produto da sua lista de desejos.
+- **Consultar todos os produtos da Wishlist**: O cliente pode consultar todos os produtos atualmente presentes em sua lista de desejos.
+- **Verificar a presença de um produto na Wishlist**: O cliente pode verificar se um determinado produto está presente em sua lista de desejos.
 
 ## Instalação
 
@@ -87,4 +91,45 @@ resposta.
 - **404**: Recurso não encontrado.
 - **409**: Conflito, como um produto já existente na wishlist.
 - **500**: Erro interno no servidor.
+
+
+## Como Rodar os Testes da API
+
+Este projeto está configurado para rodar testes automatizados utilizando os seguintes frameworks e ferramentas:
+
+- **JUnit 5**: Para testes unitários e de integração.
+- **Cucumber**: Para testes com Desenvolvimento Orientado por Comportamento (BDD), integrado ao JUnit para execução.
+- **Flapdoodle Embedded MongoDB**: Para testes com uma instância embutida do MongoDB, simulando o banco de dados em testes de integração.
+### Para rodar os testes, use o seguinte comando Maven:
+
+```bash
+    mvn clean test integration-test
+```
+Esse comando executará todos os testes configurados no projeto, incluindo testes unitários, testes de integração e testes BDD utilizando o Cucumber.
+
+### Dependências
+Aqui estão as dependências principais do projeto, relevantes para os testes e funcionalidade da API:
+
+- **JUnit 5** (`org.junit:junit-bom:5.10.3`): O framework de testes utilizado no projeto.
+- **Cucumber** (`io.cucumber:cucumber-java:7.14.0`, `io.cucumber:cucumber-spring:7.14.0`): Ferramentas de BDD integradas ao Spring.
+- **Spring Boot Starter Test** (`org.springframework.boot:spring-boot-starter-test`): Um conjunto de ferramentas para testes unitários e de integração.
+- **Flapdoodle Embedded MongoDB** (`de.flapdoodle.embed:de.flapdoodle.embed.mongo.spring30x:4.5.2`): Para rodar uma instância embutida do MongoDB para os testes.
+- **Spring Boot Starter Web** (`org.springframework.boot:spring-boot-starter-web`): Para habilitar funcionalidades web na aplicação Spring Boot.
+- **Spring Boot Starter Validation** (`org.springframework.boot:spring-boot-starter-validation`): Para validação de dados com Jakarta Validation e Hibernate Validator.
+
+## Tecnologias e Ferramentas
+### Linguagens e Frameworks
+Java (versão 17): A linguagem de programação utilizada neste projeto.
+Spring Boot (versão 3.4.1): O framework utilizado para construir a API.
+Lombok (versão 1.18.28): Uma biblioteca usada para reduzir o código repetitivo em Java (ex.: getters, setters, equals, hashCode).
+## Banco de Dados
+- **MongoDB: Um banco de dados NoSQL utilizado neste projeto, integrado ao Spring Boot via Spring Boot Starter Data MongoDB.
+Ferramentas de Teste
+- **JUnit** (`versão 5.10.3`): O framework principal para os testes no projeto.
+- **Cucumber (`versão 7.14.0`): Para testes de BDD.
+- **Spring Boot Starter Test**: Um conjunto de ferramentas para facilitar os testes em aplicações Spring Boot.
+- **Flapdoodle Embedded MongoDB**: Para rodar MongoDB em memória durante os testes.
+
+## Docker
+- **Docker** (`versão 27.4.1`) e docker-compose (`versão 1.29.2`): Usados para criar containers para o ambiente de desenvolvimento e o banco de dados, garantindo consistência entre os ambientes de desenvolvimento e produção.
 
