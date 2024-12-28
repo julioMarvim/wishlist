@@ -9,9 +9,7 @@ import com.marvim.wishlist.output.dto.response.WishlistResponseOutput;
 import com.marvim.wishlist.repository.entity.ProductEntity;
 import com.marvim.wishlist.repository.entity.WishlistEntity;
 import com.marvim.wishlist.repository.entity.WishlistFactory;
-import com.marvim.wishlist.repository.mapper.AddProductToEntityMapper;
-import com.marvim.wishlist.repository.mapper.WishlistOutputToEntityMapper;
-import com.marvim.wishlist.repository.mapper.WishlistToOutputMapper;
+import com.marvim.wishlist.repository.mapper.RepositoryMappers;
 import com.marvim.wishlist.repository.mongo.SpringDataWishlistRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +33,7 @@ public class WishlistRepositoryImpl implements WishlistRepository {
                 .orElseGet(() -> WishlistFactory.createNew(clientId));
 
         wishlistValidations(addProductRequestOutput, wishlistEntity);
-        ProductEntity productEntity = AddProductToEntityMapper.toEntity(addProductRequestOutput);
+        ProductEntity productEntity = RepositoryMappers.toProduct(addProductRequestOutput);
         wishlistEntity.products().add(productEntity);
         repository.save(wishlistEntity);
         logger.info("Wishlist with ID: {} successfully updated in database for customer with ID: {}", wishlistEntity.id(), wishlistEntity.clientId());
@@ -50,7 +48,7 @@ public class WishlistRepositoryImpl implements WishlistRepository {
     public void remove(String clientId, String productId) {
         logger.info("Starting database operation to remove product with ID: {} in wishlist from client with ID: {}", productId, clientId);
         WishlistResponseOutput wishlistDto = findOrCreate(clientId);
-        WishlistEntity wishlistEntity = WishlistOutputToEntityMapper.toOutputDto(wishlistDto);
+        WishlistEntity wishlistEntity = RepositoryMappers.toWishlist(wishlistDto);
         WishlistEntity newWishlist = wishlistEntity.removeProduct(productId);
         repository.save(newWishlist);
         logger.info("Success in removing product with ID: {} from wishlist with ID: {} from customer with ID: {}", productId, wishlistEntity.id(), wishlistEntity.clientId());
@@ -58,12 +56,12 @@ public class WishlistRepositoryImpl implements WishlistRepository {
 
     public WishlistResponseOutput findOrCreate(String clientId) {
         return repository.findByClientId(clientId)
-                .map(WishlistToOutputMapper::toOutputDto)
+                .map(RepositoryMappers::toOutput)
                 .orElseGet(() -> {
                     logger.info("No wishlist found for client ID: {}. Creating a new wishlist.", clientId);
                     WishlistEntity newWishlistEntity = WishlistFactory.createNew(clientId);
                     WishlistEntity savedWishlistEntity = repository.save(newWishlistEntity);
-                    return WishlistToOutputMapper.toOutputDto(savedWishlistEntity);
+                    return RepositoryMappers.toOutput(savedWishlistEntity);
                 });
     }
 
