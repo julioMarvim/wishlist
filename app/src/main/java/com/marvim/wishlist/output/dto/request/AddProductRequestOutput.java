@@ -1,14 +1,8 @@
 package com.marvim.wishlist.output.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-
-@Getter
-@Builder
-@AllArgsConstructor
-public class AddProductRequestOutput {
-    private String id;
-    private String name;
-    private String description;
+public record AddProductRequestOutput(
+        String id,
+        String name,
+        String description
+) {
 }

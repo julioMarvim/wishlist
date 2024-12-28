@@ -25,12 +25,7 @@ class AddProductEntityToWishlistEntityUseCaseImplTest {
     @Test
     void shouldSaveProductWhenExecutingUseCase() {
         String clientId = "client-id";
-        AddProductRequestInput productyEntity = AddProductRequestInput.builder()
-                .id("productyEntity-id")
-                .name("Garrafa")
-                .description("Garrafa de café")
-                .build();
-
+        AddProductRequestInput productyEntity = new AddProductRequestInput("productyEntity-id", "name", "description");
         useCase.execute(clientId, productyEntity);
 
         ArgumentCaptor<String> clientIdCaptor = ArgumentCaptor.forClass(String.class);
@@ -38,9 +33,9 @@ class AddProductEntityToWishlistEntityUseCaseImplTest {
         verify(wishlistRepository).save(clientIdCaptor.capture(), productCaptor.capture());
 
         assertEquals(clientId, clientIdCaptor.getValue());
-        assertEquals(productyEntity.getId(), productCaptor.getValue().getId());
-        assertEquals(productyEntity.getName(), productCaptor.getValue().getName());
-        assertEquals(productyEntity.getDescription(), productCaptor.getValue().getDescription());
+        assertEquals(productyEntity.id(), productCaptor.getValue().id());
+        assertEquals(productyEntity.name(), productCaptor.getValue().name());
+        assertEquals(productyEntity.description(), productCaptor.getValue().description());
     }
 }
 

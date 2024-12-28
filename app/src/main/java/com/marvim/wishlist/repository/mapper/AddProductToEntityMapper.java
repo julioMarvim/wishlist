@@ -6,10 +6,6 @@ import com.marvim.wishlist.repository.entity.ProductEntity;
 public class AddProductToEntityMapper {
 
     public static ProductEntity toEntity(AddProductRequestOutput addProductRequestOutput) {
-        return ProductEntity.builder()
-                .id(addProductRequestOutput.getId())
-                .name(addProductRequestOutput.getName())
-                .description(addProductRequestOutput.getDescription())
-                .build();
+        return new ProductEntity(addProductRequestOutput.id(), addProductRequestOutput.name(), addProductRequestOutput.description());
     }
 }

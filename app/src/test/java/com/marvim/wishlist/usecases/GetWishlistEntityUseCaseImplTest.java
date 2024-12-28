@@ -30,23 +30,10 @@ public class GetWishlistEntityUseCaseImplTest {
 
     @BeforeEach
     void setUp() {
-        ProductResponseOutput productEntity1 = ProductResponseOutput.builder()
-                .id("product-id-1")
-                .name("Garrafa")
-                .description("Garrafa de café")
-                .build();
+        ProductResponseOutput productEntity1 = new ProductResponseOutput("product-id-1", "Garrafa", "Garrafa de café");
+        ProductResponseOutput productEntity2 = new ProductResponseOutput("product-id-2", "Caneca", "Caneca térmica");
 
-        ProductResponseOutput productEntity2 = ProductResponseOutput.builder()
-                .id("product-id-2")
-                .name("Caneca")
-                .description("Caneca térmica")
-                .build();
-
-        wishlistResponseOutput = WishlistResponseOutput.builder()
-                .id("wishlist-id")
-                .clientId("client-id")
-                .products(List.of(productEntity1, productEntity2))
-                .build();
+        wishlistResponseOutput = new WishlistResponseOutput("wishlist-id", "client-id", List.of(productEntity1, productEntity2));
     }
 
     @Test
@@ -56,10 +43,10 @@ public class GetWishlistEntityUseCaseImplTest {
         WishlistResponseInput result = useCase.execute("client-id");
 
         assertNotNull(result);
-        assertEquals("client-id", result.getClientId());
-        assertEquals(2, result.getProducts().size());
-        assertEquals("product-id-1", result.getProducts().get(0).getId());
-        assertEquals("product-id-2", result.getProducts().get(1).getId());
+        assertEquals("client-id", result.clientId());
+        assertEquals(2, result.products().size());
+        assertEquals("product-id-1", result.products().get(0).id());
+        assertEquals("product-id-2", result.products().get(1).id());
 
         verify(wishlistRepository, times(1)).findOrCreate("client-id");
     }

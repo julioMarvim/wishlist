@@ -173,7 +173,7 @@ Aqui estão as dependências principais do projeto, relevantes para os testes e 
 ### Linguagens e Frameworks
 Java (versão 17): A linguagem de programação utilizada neste projeto.
 Spring Boot (versão 3.4.1): O framework utilizado para construir a API.
-Lombok (versão 1.18.28): Uma biblioteca usada para reduzir o código repetitivo em Java (ex.: getters, setters, equals, hashCode).
+
 ## Banco de Dados
 - **MongoDB**: Um banco de dados NoSQL utilizado neste projeto, integrado ao Spring Boot via Spring Boot Starter Data MongoDB.
 

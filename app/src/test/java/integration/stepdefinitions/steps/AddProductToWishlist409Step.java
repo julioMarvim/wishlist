@@ -49,11 +49,7 @@ public class AddProductToWishlist409Step {
 
     @Quando("eu faço uma requisição POST para adicionar o produto a wishlist do cliente 9")
     public void euFacoUmaRequisicaoPOSTParaAdicionarOProdutoAWishlistDoCliente() throws JsonProcessingException {
-        AddProductRequest addProductRequest = AddProductRequest.builder()
-                .id("21")
-                .name("Produto Extra")
-                .description("Descrição do Produto Extra")
-                .build();
+        AddProductRequest addProductRequest = new AddProductRequest("product-id", "name", "description");
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
@@ -81,9 +77,9 @@ public class AddProductToWishlist409Step {
                 objectMapper.getTypeFactory().constructParametricType(ApiResponse.class, ErrorResponse.class));
 
         ErrorResponse errorResponse = apiResponse.data();
-        assertThat(errorResponse.getCode()).isEqualTo("WISHLIST_LIMIT_EXCEEDED");
-        assertThat(errorResponse.getErrors()).hasSize(1);
-        assertThat(errorResponse.getErrors().get(0).getMessage()).isEqualTo(
+        assertThat(errorResponse.code()).isEqualTo("WISHLIST_LIMIT_EXCEEDED");
+        assertThat(errorResponse.errors()).hasSize(1);
+        assertThat(errorResponse.errors().get(0).message()).isEqualTo(
                 String.format("Customer ID %s has exceeded the maximum number of products in the wishlist.", clientId)
         );
     }

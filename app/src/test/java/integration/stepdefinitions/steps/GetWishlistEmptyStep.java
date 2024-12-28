@@ -29,7 +29,7 @@ public class GetWishlistEmptyStep {
     public void queNaoExisteUmaWishlistCadastradaNoSistemaParaOClienteComClientId(String clientId) {
         this.clientId = clientId;
         WishlistResponseOutput wishlistDto = wishlistRepository.findOrCreate(clientId);
-        assertThat(wishlistDto.getProducts().isEmpty()).isTrue();
+        assertThat(wishlistDto.products().isEmpty()).isTrue();
     }
 
     @Quando("eu faço uma requisição GET para obter a wishlist do cliente com clientId {string}")
@@ -49,8 +49,8 @@ public class GetWishlistEmptyStep {
                 objectMapper.getTypeFactory().constructParametricType(ApiResponse.class, WishlistResponseOutput.class));
 
         WishlistResponseOutput wishlistDto = apiResponse.data();
-        assertThat(wishlistDto.getClientId()).isEqualTo(clientId);
-        assertThat(wishlistDto.getProducts()).isEmpty();
+        assertThat(wishlistDto.clientId()).isEqualTo(clientId);
+        assertThat(wishlistDto.products()).isEmpty();
     }
 
 }

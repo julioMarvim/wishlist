@@ -11,32 +11,38 @@ import com.marvim.wishlist.input.CheckProductInWishlistUseCase;
 import com.marvim.wishlist.input.GetWishlistUseCase;
 import com.marvim.wishlist.input.RemoveProductFromWishlistUseCase;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/v1/wishlist")
 public class WishlistControllerImpl implements WishlistOpenApi {
 
     private static final Logger logger = LoggerFactory.getLogger(WishlistControllerImpl.class);
 
-    private final AddProductToWishlistUseCase addProductToWishlistUseCase;
-    private final RemoveProductFromWishlistUseCase removeProductFromWishlistUseCase;
-    private final GetWishlistUseCase getWishlistUseCase;
-    private final CheckProductInWishlistUseCase checkProductInWishlistUseCase;
+    @Autowired
+    private AddProductToWishlistUseCase addProductToWishlistUseCase;
+
+    @Autowired
+    private RemoveProductFromWishlistUseCase removeProductFromWishlistUseCase;
+
+    @Autowired
+    private GetWishlistUseCase getWishlistUseCase;
+
+    @Autowired
+    private CheckProductInWishlistUseCase checkProductInWishlistUseCase;
 
     @Override
     @PostMapping("/{clientId}")
     public ResponseEntity<Void> add(@PathVariable("clientId") String clientId,
                                     @Valid @RequestBody AddProductRequest request) {
-        logger.info("Received request to add product with ID: {} to wishlist for client with ID: {}", request.getId(), clientId);
+        logger.info("Received request to add product with ID: {} to wishlist for client with ID: {}", request.id(), clientId);
         addProductToWishlistUseCase.execute(clientId, AddProductToInputMapper.toInput(request));
-        logger.info("Success in adding the product with ID: {} to the wish list for the customer with ID: {}", request.getId(), clientId);
+        logger.info("Success in adding the product with ID: {} to the wish list for the customer with ID: {}", request.id(), clientId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

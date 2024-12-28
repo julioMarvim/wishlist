@@ -11,20 +11,16 @@ import java.util.stream.Collectors;
 public class WishlistToInputMapper {
 
     public static WishlistResponseInput toInputDto(WishlistResponseOutput wishlistResponseOutput) {
-        List<ProductResponseInput> productResponses = toProductsInputDto(wishlistResponseOutput.getProducts());
-        return WishlistResponseInput.builder()
-                .id(wishlistResponseOutput.getId())
-                .clientId(wishlistResponseOutput.getClientId())
-                .products(productResponses)
-                .build();
+        List<ProductResponseInput> productResponses = toProductsInputDto(wishlistResponseOutput.products());
+        return new WishlistResponseInput(wishlistResponseOutput.id(), wishlistResponseOutput.clientId(), productResponses);
     }
 
     private static List<ProductResponseInput> toProductsInputDto(List<ProductResponseOutput> productResponseOutput) {
         return productResponseOutput.stream()
                 .map(product -> new ProductResponseInput(
-                        product.getId(),
-                        product.getName(),
-                        product.getDescription()))
+                        product.id(),
+                        product.name(),
+                        product.description()))
                 .collect(Collectors.toList());
     }
 }

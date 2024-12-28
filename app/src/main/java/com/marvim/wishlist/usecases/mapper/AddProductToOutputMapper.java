@@ -6,10 +6,6 @@ import com.marvim.wishlist.output.dto.request.AddProductRequestOutput;
 public class AddProductToOutputMapper {
 
     public static AddProductRequestOutput toOutputDto(AddProductRequestInput request) {
-        return AddProductRequestOutput.builder()
-                .id(request.getId())
-                .name(request.getName())
-                .description(request.getDescription())
-                .build();
+        return new AddProductRequestOutput(request.id(), request.name(), request.description());
     }
 }

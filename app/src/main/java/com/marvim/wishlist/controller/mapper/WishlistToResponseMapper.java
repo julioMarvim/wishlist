@@ -11,10 +11,10 @@ import java.util.stream.Collectors;
 public class WishlistToResponseMapper {
 
     public static WishlistRespons toResponse(WishlistResponseInput wishlistResponseInput) {
-        List<ProductResponse> productResponses = mapProductsToProductResponses(wishlistResponseInput.getProducts());
+        List<ProductResponse> productResponses = mapProductsToProductResponses(wishlistResponseInput.products());
         return new WishlistRespons(
-                wishlistResponseInput.getId(),
-                wishlistResponseInput.getClientId(),
+                wishlistResponseInput.id(),
+                wishlistResponseInput.clientId(),
                 productResponses
         );
     }
@@ -22,9 +22,9 @@ public class WishlistToResponseMapper {
     private static List<ProductResponse> mapProductsToProductResponses(List<ProductResponseInput> productResponseInput) {
         return productResponseInput.stream()
                 .map(product -> new ProductResponse(
-                        product.getId(),
-                        product.getName(),
-                        product.getDescription()))
+                        product.id(),
+                        product.name(),
+                        product.description()))
                 .collect(Collectors.toList());
     }
 }

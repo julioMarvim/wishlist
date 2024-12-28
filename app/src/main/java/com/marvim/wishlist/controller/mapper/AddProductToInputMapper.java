@@ -6,10 +6,6 @@ import com.marvim.wishlist.input.dto.request.AddProductRequestInput;
 public class AddProductToInputMapper {
 
     public static AddProductRequestInput toInput(AddProductRequest request) {
-        return AddProductRequestInput.builder()
-                .id(request.getId())
-                .name(request.getName())
-                .description(request.getDescription())
-                .build();
+        return new AddProductRequestInput(request.id(), request.name(), request.description());
     }
 }

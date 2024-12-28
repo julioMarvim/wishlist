@@ -13,18 +13,18 @@ import com.marvim.wishlist.repository.mapper.AddProductToEntityMapper;
 import com.marvim.wishlist.repository.mapper.WishlistOutputToEntityMapper;
 import com.marvim.wishlist.repository.mapper.WishlistToOutputMapper;
 import com.marvim.wishlist.repository.mongo.SpringDataWishlistRepository;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@RequiredArgsConstructor
 public class WishlistRepositoryImpl implements WishlistRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(WishlistRepositoryImpl.class);
 
-    private final SpringDataWishlistRepository repository;
+    @Autowired
+    private SpringDataWishlistRepository repository;
 
     private static final int MAX_PRODUCTS = 20;
 
@@ -36,9 +36,9 @@ public class WishlistRepositoryImpl implements WishlistRepository {
 
         wishlistValidations(addProductRequestOutput, wishlistEntity);
         ProductEntity productEntity = AddProductToEntityMapper.toEntity(addProductRequestOutput);
-        wishlistEntity.addProduct(productEntity);
+        wishlistEntity.products().add(productEntity);
         repository.save(wishlistEntity);
-        logger.info("Wishlist with ID: {} successfully updated in database for customer with ID: {}", wishlistEntity.getId(), wishlistEntity.getClientId());
+        logger.info("Wishlist with ID: {} successfully updated in database for customer with ID: {}", wishlistEntity.id(), wishlistEntity.clientId());
     }
 
     private void wishlistValidations(AddProductRequestOutput addProductRequestOutput, WishlistEntity wishlistEntity) {
@@ -51,9 +51,9 @@ public class WishlistRepositoryImpl implements WishlistRepository {
         logger.info("Starting database operation to remove product with ID: {} in wishlist from client with ID: {}", productId, clientId);
         WishlistResponseOutput wishlistDto = findOrCreate(clientId);
         WishlistEntity wishlistEntity = WishlistOutputToEntityMapper.toOutputDto(wishlistDto);
-        wishlistEntity.removeProduct(productId);
-        repository.save(wishlistEntity);
-        logger.info("Success in removing product with ID: {} from wishlist with ID: {} from customer with ID: {}", productId, wishlistEntity.getId(), wishlistEntity.getClientId());
+        WishlistEntity newWishlist = wishlistEntity.removeProduct(productId);
+        repository.save(newWishlist);
+        logger.info("Success in removing product with ID: {} from wishlist with ID: {} from customer with ID: {}", productId, wishlistEntity.id(), wishlistEntity.clientId());
     }
 
     public WishlistResponseOutput findOrCreate(String clientId) {
@@ -62,8 +62,8 @@ public class WishlistRepositoryImpl implements WishlistRepository {
                 .orElseGet(() -> {
                     logger.info("No wishlist found for client ID: {}. Creating a new wishlist.", clientId);
                     WishlistEntity newWishlistEntity = WishlistFactory.createNew(clientId);
-                    repository.save(newWishlistEntity);
-                    return WishlistToOutputMapper.toOutputDto(newWishlistEntity);
+                    WishlistEntity savedWishlistEntity = repository.save(newWishlistEntity);
+                    return WishlistToOutputMapper.toOutputDto(savedWishlistEntity);
                 });
     }
 
@@ -75,23 +75,23 @@ public class WishlistRepositoryImpl implements WishlistRepository {
     }
 
     private void validateWishlistLimit(WishlistEntity wishlistEntity) {
-        if (wishlistEntity.getProducts().size() >= MAX_PRODUCTS) {
-            logger.error("Wishlist for client with ID: {} exceeds the limit of {} products", wishlistEntity.getClientId(), MAX_PRODUCTS);
-            throw new WishlistLimitExceededException(wishlistEntity.getClientId());
+        if (wishlistEntity.products().size() >= MAX_PRODUCTS) {
+            logger.error("Wishlist for client with ID: {} exceeds the limit of {} products", wishlistEntity.clientId(), MAX_PRODUCTS);
+            throw new WishlistLimitExceededException(wishlistEntity.clientId());
         }
     }
 
     private void validateProductAlreadyExistsInWishlist(WishlistEntity wishlistEntity, AddProductRequestOutput productyEntity) {
-        boolean exists = wishlistEntity.getProducts().stream()
-                .anyMatch(p -> p.getId().equals(productyEntity.getId()));
+        boolean exists = wishlistEntity.products().stream()
+                .anyMatch(p -> p.id().equals(productyEntity.id()));
         if (exists) {
-            logger.error("ProductEntity with ID: {} already exists in wishlist for client with ID: {}", productyEntity.getId(), wishlistEntity.getClientId());
-            throw new ProductAlreadyInWishlistException(wishlistEntity.getClientId(), productyEntity.getId());
+            logger.error("ProductEntity with ID: {} already exists in wishlist for client with ID: {}", productyEntity.id(), wishlistEntity.clientId());
+            throw new ProductAlreadyInWishlistException(wishlistEntity.clientId(), productyEntity.id());
         }
     }
 
     private static void validateProductInWhishlist(String clientId, String productId, WishlistResponseOutput wishlistDto) {
-        if (wishlistDto.getProducts().stream().noneMatch(product -> product.getId().equals(productId))) {
+        if (wishlistDto.products().stream().noneMatch(product -> product.id().equals(productId))) {
             logger.error("ProductEntity with ID: {} not found in wishlist for client with ID: {}", productId, clientId);
             throw new ProductNotFoundException(clientId, productId);
         }

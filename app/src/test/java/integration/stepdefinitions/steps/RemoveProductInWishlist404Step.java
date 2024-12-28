@@ -69,8 +69,8 @@ public class RemoveProductInWishlist404Step extends BaseSteps {
                 objectMapper.getTypeFactory().constructParametricType(ApiResponse.class, ErrorResponse.class));
 
         ErrorResponse errorResponse = apiResponse.data();
-        assertThat(errorResponse.getCode()).isEqualTo("PRODUCT_NOT_FOUND_ERROR");
-        assertThat(errorResponse.getErrors()).hasSize(1);
-        assertThat(errorResponse.getErrors().get(0).getMessage()).isEqualTo("Product 2 not found in customer wishlist with id: 6");
+        assertThat(errorResponse.code()).isEqualTo("PRODUCT_NOT_FOUND_ERROR");
+        assertThat(errorResponse.errors()).hasSize(1);
+        assertThat(errorResponse.errors().get(0).message()).isEqualTo("Product 2 not found in customer wishlist with id: 6");
     }
 }

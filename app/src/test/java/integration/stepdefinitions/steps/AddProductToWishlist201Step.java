@@ -48,11 +48,7 @@ public class AddProductToWishlist201Step {
 
     @Quando("eu faço uma requisição POST para adicionar o produto a wishlist do cliente 7")
     public void euFacoUmaRequisicaoPOSTParaAdicionarOProdutoAWishlistDoCliente7() throws JsonProcessingException {
-        addProductRequest = AddProductRequest.builder()
-                .id("2")
-                .name("Caneca")
-                .description("Caneca de porcelana")
-                .build();
+        addProductRequest = new AddProductRequest("product-id", "name", "description");
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");

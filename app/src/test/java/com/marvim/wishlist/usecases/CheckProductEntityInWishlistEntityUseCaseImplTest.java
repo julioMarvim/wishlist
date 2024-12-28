@@ -31,22 +31,10 @@ class CheckProductEntityInWishlistEntityUseCaseImplTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        ProductEntity productEntity1 = ProductEntity.builder()
-                .id("product-id-1")
-                .name("Garrafa")
-                .description("Garrafa de café")
-                .build();
+        ProductEntity productEntity1 = new ProductEntity("product-id-1", "Garrafa","Garrafa de café");
+        ProductEntity productEntity2 =  new ProductEntity("product-id-2", "Caneca","Caneca térmica");
 
-        ProductEntity productEntity2 = ProductEntity.builder()
-                .id("product-id-2")
-                .name("Caneca")
-                .description("Caneca térmica")
-                .build();
-
-        wishlistEntity = WishlistEntity.builder()
-                .clientId("client-id")
-                .products(List.of(productEntity1, productEntity2))
-                .build();
+        wishlistEntity = new WishlistEntity(null, "client-id", List.of(productEntity1, productEntity2));
     }
 
     @Test

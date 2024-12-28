@@ -63,9 +63,9 @@ public class GetWishlistFullStep {
     public void aRespostaDeveConterOsDadosQueForamCadastradosPreviamente() {
         assertThat(response.getBody()).contains(clientId);
         products.forEach(product -> {
-            assertThat(response.getBody()).contains(product.getId());
-            assertThat(response.getBody()).contains(product.getName());
-            assertThat(response.getBody()).contains(product.getDescription());
+            assertThat(response.getBody()).contains(product.id());
+            assertThat(response.getBody()).contains(product.name());
+            assertThat(response.getBody()).contains(product.description());
         });
     }
 }

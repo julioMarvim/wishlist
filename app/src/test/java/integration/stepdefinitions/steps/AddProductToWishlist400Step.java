@@ -50,11 +50,7 @@ public class AddProductToWishlist400Step {
 
     @Quando("eu faço uma requisição POST para adicionar o produto a wishlist do cliente 8")
     public void euFacoUmaRequisicaoPOSTParaAdicionarOProdutoAWishlistDoCliente8() throws JsonProcessingException {
-        addProductRequest = AddProductRequest.builder()
-                .id("1")
-                .name("Garrafa")
-                .description("Garrafa de cafe")
-                .build();
+        addProductRequest = new AddProductRequest("1", "Garrafa", "Garrafa de cafe");
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
@@ -82,8 +78,8 @@ public class AddProductToWishlist400Step {
                 objectMapper.getTypeFactory().constructParametricType(ApiResponse.class, ErrorResponse.class));
 
         ErrorResponse errorResponse = apiResponse.data();
-        assertThat(errorResponse.getCode()).isEqualTo("PRODUCT_ALREADY_IN_WISHLIST");
-        assertThat(errorResponse.getErrors()).hasSize(1);
-        assertThat(errorResponse.getErrors().get(0).getMessage()).isEqualTo("Product with ID 1 is already in the customer id 8 wishlist.");
+        assertThat(errorResponse.code()).isEqualTo("PRODUCT_ALREADY_IN_WISHLIST");
+        assertThat(errorResponse.errors()).hasSize(1);
+        assertThat(errorResponse.errors().get(0).message()).isEqualTo("Product with ID 1 is already in the customer id 8 wishlist.");
     }
 }

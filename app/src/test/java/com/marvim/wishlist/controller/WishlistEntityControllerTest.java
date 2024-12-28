@@ -54,22 +54,10 @@ public class WishlistEntityControllerTest {
 
     @BeforeEach
     void setUp() {
-        ProductResponseInput productEntity1 = ProductResponseInput.builder()
-                .id("product-id-1")
-                .name("Garrafa")
-                .description("Garrafa de café")
-                .build();
+        ProductResponseInput productEntity1 = new ProductResponseInput("product-id-1", "name", "desciption");
+        ProductResponseInput productEntity2 = new ProductResponseInput("product-id-2", "name", "desciption");
 
-        ProductResponseInput productEntity2 = ProductResponseInput.builder()
-                .id("product-id-2")
-                .name("Caneca")
-                .description("Caneca térmica")
-                .build();
-
-        wishlistResponse = WishlistResponseInput.builder()
-                .clientId("client-id")
-                .products(List.of(productEntity1, productEntity2))
-                .build();
+        wishlistResponse = new WishlistResponseInput("id", "client-id", List.of(productEntity1, productEntity2));
 
         mockMvc = MockMvcBuilders.standaloneSetup(wishlistControllerImpl).build();
     }
@@ -77,11 +65,7 @@ public class WishlistEntityControllerTest {
     @Test
     void shouldAddProductToWishlist() throws Exception {
         String clientId = "client-id";
-        AddProductRequest request = AddProductRequest.builder()
-                .id("product-id")
-                .name("Garrafa")
-                .description("Garrafa de café")
-                .build();
+        AddProductRequest request = new AddProductRequest("product-id", "name", "description");
 
         mockMvc.perform(post("/api/v1/wishlist/{clientId}", clientId)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -117,7 +101,8 @@ public class WishlistEntityControllerTest {
                     String content = result.getResponse().getContentAsString();
 
                     ApiResponse<WishlistRespons> response = new ObjectMapper()
-                            .readValue(content, new TypeReference<>() {});
+                            .readValue(content, new TypeReference<>() {
+                            });
 
                     assertThat(response.data().products()).hasSize(2);
                     assertThat(response.data().products().get(0).id()).isEqualTo("product-id-1");
