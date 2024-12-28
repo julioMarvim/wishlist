@@ -68,9 +68,21 @@ Essas versões foram usadas para criar containers para o ambiente de desenvolvim
   - [Download para macOS](https://maven.apache.org/download.cgi)
 
 ## Detalhes Importantes:
-Certifique-se navegar até a pasta raiz do projeto (`wishlist`) e de que a porta `8080` está disponível antes de rodar a aplicação.
 
-Com todos pré requisitos configurados execute o comando a seguir no terminal: 
+Certifique-se de seguir os passos abaixo para garantir que o projeto funcione corretamente:
+
+### 1. Clonando o Repositório
+Para obter o código fonte do projeto, execute o seguinte comando no terminal:
+
+```bash
+git clone https://github.com/julioMarvim/wishlist.git
+```
+
+### 2. Verifique a Disponibilidade da Porta
+  Certifique-se de que a porta `8080` está disponível no seu ambiente antes de iniciar os containers.
+
+### 3. Rodando a Aplicação com Docker
+   Com todos os pré-requisitos configurados navegue até a pasta raiz do projeto (`wishlist`), e execute os seguintes comandos:
 
 Para **inicia os containers em segundo plano** execute:
 ```bash
