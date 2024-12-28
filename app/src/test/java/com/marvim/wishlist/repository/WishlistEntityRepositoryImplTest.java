@@ -51,8 +51,7 @@ class WishlistEntityRepositoryImplTest {
                 .products(List.of(AddProductToEntityMapper.toEntity(addProductRequestOutput)))
                 .build();
 
-        int maxProducts = 12;
-        wishlistRepository = new WishlistRepositoryImpl(springDataRepository, maxProducts);
+        wishlistRepository = new WishlistRepositoryImpl(springDataRepository);
     }
 
     @Test

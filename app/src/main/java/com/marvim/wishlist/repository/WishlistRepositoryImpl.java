@@ -27,8 +27,8 @@ public class WishlistRepositoryImpl implements WishlistRepository {
 
     private final SpringDataWishlistRepository repository;
 
-    @Value("wishlist.max.product.limit")
-    private final int MAX_PRODUCTS;
+    @Value("${wishlist.max.product.limit}")
+    private int MAX_PRODUCTS;
 
     @Override
     public void save(String clientId, AddProductRequestOutput addProductRequestOutput) {
