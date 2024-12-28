@@ -3,10 +3,8 @@ package integration.stepdefinitions.steps;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marvim.wishlist.controller.dto.request.AddProductRequest;
-import com.marvim.wishlist.controller.dto.response.ApiResponseDto;
-import com.marvim.wishlist.controller.dto.response.WishlistResponseDto;
 import com.marvim.wishlist.output.WishlistRepository;
-import com.marvim.wishlist.output.dto.request.AddProductRequestOutputDto;
+import com.marvim.wishlist.output.dto.request.AddProductRequestOutput;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Entao;
@@ -39,7 +37,7 @@ public class AddProductToWishlist201Step {
         List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
         for (Map<String, String> row : rows) {
             this.clientId = row.get("clientId");
-            var product = new AddProductRequestOutputDto(
+            var product = new AddProductRequestOutput(
                     row.get("id"),
                     row.get("name"),
                     row.get("description")
@@ -50,11 +48,7 @@ public class AddProductToWishlist201Step {
 
     @Quando("eu faço uma requisição POST para adicionar o produto a wishlist do cliente 7")
     public void euFacoUmaRequisicaoPOSTParaAdicionarOProdutoAWishlistDoCliente7() throws JsonProcessingException {
-        addProductRequest = AddProductRequest.builder()
-                .id("2")
-                .name("Caneca")
-                .description("Caneca de porcelana")
-                .build();
+        addProductRequest = new AddProductRequest("product-id", "name", "description");
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");

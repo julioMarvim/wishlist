@@ -3,7 +3,7 @@ package integration.stepdefinitions.steps;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marvim.wishlist.output.WishlistRepository;
-import com.marvim.wishlist.output.dto.request.AddProductRequestOutputDto;
+import com.marvim.wishlist.output.dto.request.AddProductRequestOutput;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Entao;
@@ -28,7 +28,7 @@ public class GetWishlistFullStep {
 
     private ResponseEntity<String> response;
     private String clientId;
-    private List<AddProductRequestOutputDto> products;
+    private List<AddProductRequestOutput> products;
 
     @Dado("que existe uma wishlist cadastrada no sistema para o clientId 1:")
     public void queExisteUmaWishlistCadastradaNoSistema(DataTable dataTable) throws Exception {
@@ -38,7 +38,7 @@ public class GetWishlistFullStep {
             String productsJson = columns.get("products");
             List<Map<String, String>> rawProducts = new ObjectMapper().readValue(productsJson, new TypeReference<>() {});
             this.products = rawProducts.stream()
-                    .map(map -> new AddProductRequestOutputDto(
+                    .map(map -> new AddProductRequestOutput(
                             map.get("id"),
                             map.get("name"),
                             map.get("description")
@@ -63,9 +63,9 @@ public class GetWishlistFullStep {
     public void aRespostaDeveConterOsDadosQueForamCadastradosPreviamente() {
         assertThat(response.getBody()).contains(clientId);
         products.forEach(product -> {
-            assertThat(response.getBody()).contains(product.getId());
-            assertThat(response.getBody()).contains(product.getName());
-            assertThat(response.getBody()).contains(product.getDescription());
+            assertThat(response.getBody()).contains(product.id());
+            assertThat(response.getBody()).contains(product.name());
+            assertThat(response.getBody()).contains(product.description());
         });
     }
 }

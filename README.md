@@ -1,11 +1,40 @@
 # Wishlist API
 
-A API tem como objetivo fornecer um serviço HTTP para gerenciar a funcionalidade de Wishlist (lista de desejos) de um cliente. Ela permite realizar as seguintes operações:
+Esta API tem como objetivo oferecer um serviço HTTP para expor as funcionalidades de uma Wishlist (lista de desejos) para um e-comrece. Ela permite realizar as seguintes operações:
 
-- **Adicionar um produto à Wishlist**: O cliente pode adicionar um produto à sua lista de desejos.
-- **Remover um produto da Wishlist**: O cliente pode remover um produto da sua lista de desejos.
-- **Consultar todos os produtos da Wishlist**: O cliente pode consultar todos os produtos atualmente presentes em sua lista de desejos.
+- **Adicionar um produto**: O cliente pode adicionar um produto à sua lista de desejos.
+- **Remover um produto**: O cliente pode remover um produto da sua lista de desejos.
+- **Consultar todos os produtos**: O cliente pode consultar todos os produtos atualmente presentes em sua lista de desejos.
 - **Verificar a presença de um produto na Wishlist**: O cliente pode verificar se um determinado produto está presente em sua lista de desejos.
+
+## Decisões de Projeto
+
+Durante o desenvolvimento deta API de Wishlist, algumas decisões importantes foram tomadas para garantir simplicidade, funcionalidade e maior alinhamento com os requisitos do projeto. Vou listar as principais escolhas bem como suas respectivas justificativas:
+
+### 1. Criação Automática de Wishlist
+- **Decisão**: Sempre criar uma wishlist caso ela não exista para o cliente.
+- **Justificativa**: A API não realiza validação ou consulta para verificar a existência de um cliente. Pressupõe-se que, se o cliente é válido, ele já pode ter uma wishlist associada, pois todos os clientes têm direito a uma lista de desejos. Essa abordagem simplifica a lógica e evita verificações desnecessárias.
+
+### 2. Exceções em Contexto Global
+- **Decisão**: Todas as exceções foram centralizadas em um único contexto global.
+- **Justificativa**: Esta é uma API é pequena, então não houve necessidade de separar as exceções por camadas. Fiz isso para reduzir a complexidade e facilitar o rastreamento de erros, garantindo que todas as exceções sejam tratados de forma centralizada.
+
+### 3. Validações no Repositório
+- **Decisão**: As validações de dados e regras de negócio foram implementadas na camada de repositório.
+- **Justificativa**: Para manter a simplicidade e a responsabilidade única nos casos de uso (use cases), as validações foram movidas para o repositório. Fiz isso na tentativa de garantir que a lógica de negócios seja mantida próxima à camada de persistência de dados, para otimizar o fluxo de dados.
+
+---
+
+> **Nota:** Esta é apenas uma versão inicial do projeto. Melhorias e ajustes poderão ser feitos no futuro.
+
+
+
+**Github Actions**: Criação de workflows  executar e build, testes unitários e de testes de integração do projeto.
+<p>
+    <a href="https://github.com/julioMarvim/wishlist/actions">
+        <img alt="Build" src="https://github.com/julioMarvim/wishlist/actions/workflows/build-test.yml/badge.svg" />
+    </a>
+</p>
 
 ## Execução da API
 ## Pré requisitos: 
@@ -165,7 +194,7 @@ Aqui estão as dependências principais do projeto, relevantes para os testes e 
 ### Linguagens e Frameworks
 Java (versão 17): A linguagem de programação utilizada neste projeto.
 Spring Boot (versão 3.4.1): O framework utilizado para construir a API.
-Lombok (versão 1.18.28): Uma biblioteca usada para reduzir o código repetitivo em Java (ex.: getters, setters, equals, hashCode).
+
 ## Banco de Dados
 - **MongoDB**: Um banco de dados NoSQL utilizado neste projeto, integrado ao Spring Boot via Spring Boot Starter Data MongoDB.
 
@@ -174,5 +203,4 @@ Lombok (versão 1.18.28): Uma biblioteca usada para reduzir o código repetitivo
 - **Cucumber** (`versão 7.14.0`): Para testes de BDD.
 - **Spring Boot Starter Test**: Um conjunto de ferramentas para facilitar os testes em aplicações Spring Boot.
 - **Flapdoodle Embedded MongoDB**: Para rodar MongoDB em memória durante os testes.
-- **Github Actions**: Criação de workflows  executar e build, testes unitários e de testes de integração do projeto.
 

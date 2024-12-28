@@ -3,8 +3,8 @@ package integration.stepdefinitions.steps;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marvim.wishlist.controller.dto.request.AddProductRequest;
-import com.marvim.wishlist.controller.dto.response.ApiResponseDto;
-import com.marvim.wishlist.controller.dto.response.ErrorResponseDto;
+import com.marvim.wishlist.controller.dto.response.ApiResponse;
+import com.marvim.wishlist.controller.dto.response.ErrorResponse;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.pt.Quando;
 import io.cucumber.java.pt.Entao;
@@ -31,11 +31,7 @@ public class AddProductMethodArgumentNotValidStep {
         List<Map<String, String>> rows = dataTable.asMaps(String.class, String.class);
         Map<String, String> productData = rows.get(0);
 
-        AddProductRequest addProductRequest = AddProductRequest.builder()
-                .id(productData.get("id"))
-                .name(productData.get("name"))
-                .description(productData.get("description"))
-                .build();
+        AddProductRequest addProductRequest = new AddProductRequest(productData.get("id"), productData.get("name"), productData.get("description"));
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
@@ -59,12 +55,12 @@ public class AddProductMethodArgumentNotValidStep {
     @Entao("a resposta deve conter um VALIDATION_FAILED")
     public void aRespostaDeveConterUmVALIDATION_FAILED() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        ApiResponseDto<ErrorResponseDto> apiResponse = objectMapper.readValue(response.getBody(),
-                objectMapper.getTypeFactory().constructParametricType(ApiResponseDto.class, ErrorResponseDto.class));
+        ApiResponse<ErrorResponse> apiResponse = objectMapper.readValue(response.getBody(),
+                objectMapper.getTypeFactory().constructParametricType(ApiResponse.class, ErrorResponse.class));
 
-        ErrorResponseDto errorResponse = apiResponse.data();
-        assertThat(errorResponse.getCode()).isEqualTo("VALIDATION_FAILED");
-        assertThat(errorResponse.getErrors()).hasSize(1);
-        assertThat(errorResponse.getErrors().get(0).getMessage()).isNotEmpty();
+        ErrorResponse errorResponse = apiResponse.data();
+        assertThat(errorResponse.code()).isEqualTo("VALIDATION_FAILED");
+        assertThat(errorResponse.errors()).hasSize(1);
+        assertThat(errorResponse.errors().get(0).message()).isNotEmpty();
     }
 }

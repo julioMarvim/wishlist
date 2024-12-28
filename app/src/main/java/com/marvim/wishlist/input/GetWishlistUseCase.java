@@ -1,7 +1,7 @@
 package com.marvim.wishlist.input;
 
-import com.marvim.wishlist.input.dto.response.WishlistResponseInputDto;
+import com.marvim.wishlist.input.dto.response.WishlistResponseInput;
 
 public interface GetWishlistUseCase {
-    WishlistResponseInputDto execute(String clientId);
+    WishlistResponseInput execute(String clientId);
 }

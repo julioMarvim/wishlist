@@ -1,9 +1,8 @@
 package com.marvim.wishlist.usecases;
 
-import com.marvim.wishlist.input.dto.request.AddProductRequestInputDto;
+import com.marvim.wishlist.input.dto.request.AddProductRequestInput;
 import com.marvim.wishlist.output.WishlistRepository;
-import com.marvim.wishlist.output.dto.request.AddProductRequestOutputDto;
-import com.marvim.wishlist.usecases.AddProductToWishlistUseCaseImpl;
+import com.marvim.wishlist.output.dto.request.AddProductRequestOutput;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -26,22 +25,17 @@ class AddProductEntityToWishlistEntityUseCaseImplTest {
     @Test
     void shouldSaveProductWhenExecutingUseCase() {
         String clientId = "client-id";
-        AddProductRequestInputDto productyEntity = AddProductRequestInputDto.builder()
-                .id("productyEntity-id")
-                .name("Garrafa")
-                .description("Garrafa de café")
-                .build();
-
+        AddProductRequestInput productyEntity = new AddProductRequestInput("productyEntity-id", "name", "description");
         useCase.execute(clientId, productyEntity);
 
         ArgumentCaptor<String> clientIdCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<AddProductRequestOutputDto> productCaptor = ArgumentCaptor.forClass(AddProductRequestOutputDto.class);
+        ArgumentCaptor<AddProductRequestOutput> productCaptor = ArgumentCaptor.forClass(AddProductRequestOutput.class);
         verify(wishlistRepository).save(clientIdCaptor.capture(), productCaptor.capture());
 
         assertEquals(clientId, clientIdCaptor.getValue());
-        assertEquals(productyEntity.getId(), productCaptor.getValue().getId());
-        assertEquals(productyEntity.getName(), productCaptor.getValue().getName());
-        assertEquals(productyEntity.getDescription(), productCaptor.getValue().getDescription());
+        assertEquals(productyEntity.id(), productCaptor.getValue().id());
+        assertEquals(productyEntity.name(), productCaptor.getValue().name());
+        assertEquals(productyEntity.description(), productCaptor.getValue().description());
     }
 }
 

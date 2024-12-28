@@ -1,4 +1,4 @@
-package com.marvim.wishlist.input.exception;
+package com.marvim.wishlist.exception.global;
 
 public class ProductAlreadyInWishlistException extends RuntimeException {
     public ProductAlreadyInWishlistException(String clientId, String productId) {

@@ -2,9 +2,9 @@ package integration.stepdefinitions.steps;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.marvim.wishlist.controller.dto.response.ApiResponseDto;
+import com.marvim.wishlist.controller.dto.response.ApiResponse;
 import com.marvim.wishlist.output.WishlistRepository;
-import com.marvim.wishlist.output.dto.response.WishlistResponseOutputDto;
+import com.marvim.wishlist.output.dto.response.WishlistResponseOutput;
 import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Entao;
 import io.cucumber.java.pt.Quando;
@@ -28,8 +28,8 @@ public class GetWishlistEmptyStep {
     @Dado("que não existe uma wishlist cadastrada no sistema para o cliente com clientId {string}")
     public void queNaoExisteUmaWishlistCadastradaNoSistemaParaOClienteComClientId(String clientId) {
         this.clientId = clientId;
-        WishlistResponseOutputDto wishlistDto = wishlistRepository.findOrCreate(clientId);
-        assertThat(wishlistDto.getProducts().isEmpty()).isTrue();
+        WishlistResponseOutput wishlistDto = wishlistRepository.findOrCreate(clientId);
+        assertThat(wishlistDto.products().isEmpty()).isTrue();
     }
 
     @Quando("eu faço uma requisição GET para obter a wishlist do cliente com clientId {string}")
@@ -45,12 +45,12 @@ public class GetWishlistEmptyStep {
     @Entao("a resposta deve conter uma wishlist com a lista de produtos vazia")
     public void aRespostaDeveConterUmaWishlistComaListaDeProdutosVazia() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        ApiResponseDto<WishlistResponseOutputDto> apiResponse = objectMapper.readValue(response.getBody(),
-                objectMapper.getTypeFactory().constructParametricType(ApiResponseDto.class, WishlistResponseOutputDto.class));
+        ApiResponse<WishlistResponseOutput> apiResponse = objectMapper.readValue(response.getBody(),
+                objectMapper.getTypeFactory().constructParametricType(ApiResponse.class, WishlistResponseOutput.class));
 
-        WishlistResponseOutputDto wishlistDto = apiResponse.data();
-        assertThat(wishlistDto.getClientId()).isEqualTo(clientId);
-        assertThat(wishlistDto.getProducts()).isEmpty();
+        WishlistResponseOutput wishlistDto = apiResponse.data();
+        assertThat(wishlistDto.clientId()).isEqualTo(clientId);
+        assertThat(wishlistDto.products()).isEmpty();
     }
 
 }

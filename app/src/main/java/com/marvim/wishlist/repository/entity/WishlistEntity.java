@@ -1,33 +1,30 @@
 package com.marvim.wishlist.repository.entity;
 
-import com.marvim.wishlist.input.exception.ProductNotFoundException;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
+import com.marvim.wishlist.exception.global.ProductNotFoundException;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Builder
-@Getter
 @Document(collection = "wishlists")
-public class WishlistEntity {
-    @Id
-    private String id;
-    private String clientId;
-    private List<ProductEntity> products;
+public record WishlistEntity(
+        @Id String id,
+        String clientId,
+        List<ProductEntity> products
+) {
 
-    public void addProduct(ProductEntity productEntity) {
-        products.add(productEntity);
-    }
-
-    public void removeProduct(String productId) {
+    public WishlistEntity removeProduct(String productId) {
         ProductEntity productEntityToRemove = products.stream()
-                .filter(product -> product.getId().equals(productId))
+                .filter(product -> product.id().equals(productId))
                 .findFirst()
-                .orElseThrow(() -> new ProductNotFoundException(this.getClientId(), productId));
+                .orElseThrow(() -> new ProductNotFoundException(clientId, productId));
 
-        products.remove(productEntityToRemove);
+        List<ProductEntity> newProducts = products.stream()
+                .filter(product -> !product.id().equals(productId))
+                .collect(Collectors.toList());
+
+        return new WishlistEntity(id, clientId, newProducts);
     }
 }
+

@@ -1,10 +1,9 @@
 package com.marvim.wishlist.usecases;
 
-import com.marvim.wishlist.input.dto.response.WishlistResponseInputDto;
+import com.marvim.wishlist.input.dto.response.WishlistResponseInput;
 import com.marvim.wishlist.output.WishlistRepository;
-import com.marvim.wishlist.output.dto.response.ProductResponseOutputDto;
-import com.marvim.wishlist.output.dto.response.WishlistResponseOutputDto;
-import com.marvim.wishlist.usecases.GetWishlistUseCaseImpl;
+import com.marvim.wishlist.output.dto.response.ProductResponseOutput;
+import com.marvim.wishlist.output.dto.response.WishlistResponseOutput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,40 +26,27 @@ public class GetWishlistEntityUseCaseImplTest {
     @InjectMocks
     private GetWishlistUseCaseImpl useCase;
 
-    private WishlistResponseOutputDto wishlistResponseOutputDto;
+    private WishlistResponseOutput wishlistResponseOutput;
 
     @BeforeEach
     void setUp() {
-        ProductResponseOutputDto productEntity1 = ProductResponseOutputDto.builder()
-                .id("product-id-1")
-                .name("Garrafa")
-                .description("Garrafa de café")
-                .build();
+        ProductResponseOutput productEntity1 = new ProductResponseOutput("product-id-1", "Garrafa", "Garrafa de café");
+        ProductResponseOutput productEntity2 = new ProductResponseOutput("product-id-2", "Caneca", "Caneca térmica");
 
-        ProductResponseOutputDto productEntity2 = ProductResponseOutputDto.builder()
-                .id("product-id-2")
-                .name("Caneca")
-                .description("Caneca térmica")
-                .build();
-
-        wishlistResponseOutputDto = WishlistResponseOutputDto.builder()
-                .id("wishlist-id")
-                .clientId("client-id")
-                .products(List.of(productEntity1, productEntity2))
-                .build();
+        wishlistResponseOutput = new WishlistResponseOutput("wishlist-id", "client-id", List.of(productEntity1, productEntity2));
     }
 
     @Test
     void shouldReturnWishlist() {
-        when(wishlistRepository.findOrCreate("client-id")).thenReturn(wishlistResponseOutputDto);
+        when(wishlistRepository.findOrCreate("client-id")).thenReturn(wishlistResponseOutput);
 
-        WishlistResponseInputDto result = useCase.execute("client-id");
+        WishlistResponseInput result = useCase.execute("client-id");
 
         assertNotNull(result);
-        assertEquals("client-id", result.getClientId());
-        assertEquals(2, result.getProducts().size());
-        assertEquals("product-id-1", result.getProducts().get(0).getId());
-        assertEquals("product-id-2", result.getProducts().get(1).getId());
+        assertEquals("client-id", result.clientId());
+        assertEquals(2, result.products().size());
+        assertEquals("product-id-1", result.products().get(0).id());
+        assertEquals("product-id-2", result.products().get(1).id());
 
         verify(wishlistRepository, times(1)).findOrCreate("client-id");
     }
