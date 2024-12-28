@@ -1,4 +1,4 @@
-package com.marvim.wishlist.input.exception;
+package com.marvim.wishlist.exception.global;
 
 public class ProductNotFoundException extends RuntimeException {
     public ProductNotFoundException(String clientId, String productId) {

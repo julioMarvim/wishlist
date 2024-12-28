@@ -1,8 +1,7 @@
 package com.marvim.wishlist.repository.entity;
 
-import com.marvim.wishlist.input.exception.ProductNotFoundException;
+import com.marvim.wishlist.exception.global.ProductNotFoundException;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

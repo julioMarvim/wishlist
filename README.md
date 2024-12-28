@@ -7,6 +7,14 @@ A API tem como objetivo fornecer um serviço HTTP para gerenciar a funcionalidad
 - **Consultar todos os produtos da Wishlist**: O cliente pode consultar todos os produtos atualmente presentes em sua lista de desejos.
 - **Verificar a presença de um produto na Wishlist**: O cliente pode verificar se um determinado produto está presente em sua lista de desejos.
 
+
+**Github Actions**: Criação de workflows  executar e build, testes unitários e de testes de integração do projeto.
+<p>
+    <a href="https://github.com/julioMarvim/wishlist/actions">
+        <img alt="Build" src="https://github.com/julioMarvim/wishlist/actions/workflows/build-test.yml/badge.svg" />
+    </a>
+</p>
+
 ## Execução da API
 ## Pré requisitos: 
 ### Docker
@@ -174,5 +182,4 @@ Lombok (versão 1.18.28): Uma biblioteca usada para reduzir o código repetitivo
 - **Cucumber** (`versão 7.14.0`): Para testes de BDD.
 - **Spring Boot Starter Test**: Um conjunto de ferramentas para facilitar os testes em aplicações Spring Boot.
 - **Flapdoodle Embedded MongoDB**: Para rodar MongoDB em memória durante os testes.
-- **Github Actions**: Criação de workflows  executar e build, testes unitários e de testes de integração do projeto.
 

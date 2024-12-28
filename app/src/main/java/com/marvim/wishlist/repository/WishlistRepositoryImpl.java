@@ -1,22 +1,21 @@
 package com.marvim.wishlist.repository;
 
+import com.marvim.wishlist.exception.global.ProductAlreadyInWishlistException;
+import com.marvim.wishlist.exception.global.ProductNotFoundException;
+import com.marvim.wishlist.exception.global.WishlistLimitExceededException;
+import com.marvim.wishlist.output.WishlistRepository;
+import com.marvim.wishlist.output.dto.request.AddProductRequestOutput;
 import com.marvim.wishlist.output.dto.response.WishlistResponseOutput;
 import com.marvim.wishlist.repository.entity.ProductEntity;
 import com.marvim.wishlist.repository.entity.WishlistEntity;
-import com.marvim.wishlist.repository.mapper.AddProductToEntityMapper;
-import com.marvim.wishlist.input.exception.ProductAlreadyInWishlistException;
-import com.marvim.wishlist.input.exception.ProductNotFoundException;
-import com.marvim.wishlist.input.exception.WishlistLimitExceededException;
 import com.marvim.wishlist.repository.entity.WishlistFactory;
-import com.marvim.wishlist.output.WishlistRepository;
-import com.marvim.wishlist.output.dto.request.AddProductRequestOutput;
+import com.marvim.wishlist.repository.mapper.AddProductToEntityMapper;
 import com.marvim.wishlist.repository.mapper.WishlistOutputToEntityMapper;
 import com.marvim.wishlist.repository.mapper.WishlistToOutputMapper;
 import com.marvim.wishlist.repository.mongo.SpringDataWishlistRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -27,8 +26,7 @@ public class WishlistRepositoryImpl implements WishlistRepository {
 
     private final SpringDataWishlistRepository repository;
 
-    @Value("${wishlist.max.product.limit}")
-    private int MAX_PRODUCTS;
+    private static final int MAX_PRODUCTS = 20;
 
     @Override
     public void save(String clientId, AddProductRequestOutput addProductRequestOutput) {

@@ -2,9 +2,9 @@ package com.marvim.wishlist.controller.handler;
 
 import com.marvim.wishlist.controller.dto.response.ApiResponse;
 import com.marvim.wishlist.controller.dto.response.ErrorResponse;
-import com.marvim.wishlist.input.exception.ProductAlreadyInWishlistException;
-import com.marvim.wishlist.input.exception.ProductNotFoundException;
-import com.marvim.wishlist.input.exception.WishlistLimitExceededException;
+import com.marvim.wishlist.exception.global.ProductAlreadyInWishlistException;
+import com.marvim.wishlist.exception.global.ProductNotFoundException;
+import com.marvim.wishlist.exception.global.WishlistLimitExceededException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;

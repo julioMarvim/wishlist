@@ -1,29 +1,31 @@
 package com.marvim.wishlist.repository;
 
+import com.marvim.wishlist.exception.global.ProductAlreadyInWishlistException;
+import com.marvim.wishlist.exception.global.ProductNotFoundException;
+import com.marvim.wishlist.exception.global.WishlistLimitExceededException;
+import com.marvim.wishlist.output.dto.request.AddProductRequestOutput;
 import com.marvim.wishlist.output.dto.response.WishlistResponseOutput;
 import com.marvim.wishlist.repository.entity.ProductEntity;
 import com.marvim.wishlist.repository.entity.WishlistEntity;
 import com.marvim.wishlist.repository.mapper.AddProductToEntityMapper;
-import com.marvim.wishlist.input.exception.ProductAlreadyInWishlistException;
-import com.marvim.wishlist.input.exception.ProductNotFoundException;
-import com.marvim.wishlist.input.exception.WishlistLimitExceededException;
-import com.marvim.wishlist.output.dto.request.AddProductRequestOutput;
 import com.marvim.wishlist.repository.mongo.SpringDataWishlistRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class WishlistEntityRepositoryImplTest {
@@ -31,11 +33,13 @@ class WishlistEntityRepositoryImplTest {
     @Mock
     private SpringDataWishlistRepository springDataRepository;
 
+    @InjectMocks
     private WishlistRepositoryImpl wishlistRepository;
 
     private WishlistEntity wishlistEntity;
     private AddProductRequestOutput addProductRequestOutput;
     private final String clientId = "client-id";
+    @Value("${wishlist.max.product.limit}")
 
     @BeforeEach
     void setUp() {
