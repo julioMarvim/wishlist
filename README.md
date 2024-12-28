@@ -7,16 +7,55 @@ A API tem como objetivo fornecer um serviço HTTP para gerenciar a funcionalidad
 - **Consultar todos os produtos da Wishlist**: O cliente pode consultar todos os produtos atualmente presentes em sua lista de desejos.
 - **Verificar a presença de um produto na Wishlist**: O cliente pode verificar se um determinado produto está presente em sua lista de desejos.
 
-## Instalação
+## Execução da API
+## Pré requisitos: 
+### Docker
 
-Para executar o projeto, execute o seguinte comando na pasta raiz do projeto:
+- **Links com a documentação para instalação**:
+  - [Instalação no Windows](https://docs.docker.com/desktop/setup/install/windows-install/)
+  - [Instalação no Linux](https://docs.docker.com/desktop/setup/install/linux/)
+  - [Instalação no macOS](https://docs.docker.com/desktop/setup/install/mac-install/)
 
+- **Versões utilizadas**:
+  - Docker (`versão 27.4.1`)
+  - Docker Compose (`versão 1.29.2`)
+
+Essas versões foram usadas para criar containers para o ambiente de desenvolvimento e o banco de dados, garantindo consistência entre os ambientes de desenvolvimento e produção.
+
+### JDK
+- **Java 17**: (`versão utilizada openjdk 17.0.13`): A linguagem de programação utilizada neste projeto.
+  - [Download para Windows](https://adoptium.net/?variant=openjdk17)
+  - [Download para Linux](https://adoptium.net/?variant=openjdk17)
+  - [Download para macOS](https://adoptium.net/?variant=openjdk17)
+
+### Spring Boot
+- **Spring Boot**: (`versão 3.4.1`): O framework utilizado para construir a API.
+  - [Documentação do Spring Boot](https://spring.io/projects/spring-boot)
+
+### Apache Maven
+- **Apache Maven**: (`versão 3.8.7`): Ferramenta de automação de build utilizada no projeto.
+  - [Download para Windows](https://maven.apache.org/download.cgi)
+  - [Download para Linux](https://maven.apache.org/download.cgi)
+  - [Download para macOS](https://maven.apache.org/download.cgi)
+
+## Detalhes Importantes:
+Certifique-se navegar até a pasta raiz do projeto (`wishlist`) e de que a porta `8080` está disponível antes de rodar a aplicação.
+
+Com todos pré requisitos configurados execute o comando a seguir no terminal: 
+
+Para **inicia os containers em segundo plano** execute:
 ```bash
+docker-compose down
 docker-compose up --build -d
 ```
 
-Para finalizar a execução, utilize o comando:
+Para **iniciar os containers em primeiro plano** execute:
+```bash
+docker-compose down
+docker-compose up --build
+```
 
+Para **finalizar a execução da API**, execute:
 ```bash
 docker-compose down
 ```
@@ -24,6 +63,7 @@ docker-compose down
 ## Exemplos de requisições
 
 Aqui estão alguns exemplos de requisições para interagir com a API:
+Deixei uma **collection** do insomnia disponível com todos os endpoints para testes locais: [Collection Insomia](wishlist-collection.json) 
 
 ### Adicionar um produto à wishlist
 
@@ -66,9 +106,11 @@ curl --request DELETE \
 ## Documentação da API
 
 Para acessar a documentação completa da API, inicie o projeto e acesse o seguinte endpoint no navegador, para visualizar
-a especificação Open Api da aplicação:
+a especificação Open Api da aplicação 
 
-<http://localhost:8080/swagger-ui/index.html>
+**Certifique-se de ter seguido todos os passos em: [Detalhes importantes](#detalhes-importantes) para que o link funcione corretamente**.
+
+- **Link para o Swagger**: [Swagger-ui](http://localhost:8080/swagger-ui/index.html#/)
 
 ### Documentação das Rotas da API
 
@@ -100,12 +142,14 @@ Este projeto está configurado para rodar testes automatizados utilizando os seg
 - **JUnit 5**: Para testes unitários e de integração.
 - **Cucumber**: Para testes com Desenvolvimento Orientado por Comportamento (BDD), integrado ao JUnit para execução.
 - **Flapdoodle Embedded MongoDB**: Para testes com uma instância embutida do MongoDB, simulando o banco de dados em testes de integração.
+- 
 ### Para rodar os testes, use o seguinte comando Maven:
 
+Primeiramente certifique-se navegar até a pasta (`wishlist/app/`) do projeto antes de rodar a aplicação.
 ```bash
     mvn clean test integration-test
 ```
-Esse comando executará todos os testes configurados no projeto, incluindo testes unitários, testes de integração e testes BDD utilizando o Cucumber.
+Esse comando executará todos os testes configurados no projeto, incluindo testes unitários, e testes BDD utilizando o Cucumber.
 
 ### Dependências
 Aqui estão as dependências principais do projeto, relevantes para os testes e funcionalidade da API:
@@ -123,13 +167,12 @@ Java (versão 17): A linguagem de programação utilizada neste projeto.
 Spring Boot (versão 3.4.1): O framework utilizado para construir a API.
 Lombok (versão 1.18.28): Uma biblioteca usada para reduzir o código repetitivo em Java (ex.: getters, setters, equals, hashCode).
 ## Banco de Dados
-- **MongoDB: Um banco de dados NoSQL utilizado neste projeto, integrado ao Spring Boot via Spring Boot Starter Data MongoDB.
-Ferramentas de Teste
+- **MongoDB**: Um banco de dados NoSQL utilizado neste projeto, integrado ao Spring Boot via Spring Boot Starter Data MongoDB.
+
+## Ferramentas de Teste
 - **JUnit** (`versão 5.10.3`): O framework principal para os testes no projeto.
-- **Cucumber (`versão 7.14.0`): Para testes de BDD.
+- **Cucumber** (`versão 7.14.0`): Para testes de BDD.
 - **Spring Boot Starter Test**: Um conjunto de ferramentas para facilitar os testes em aplicações Spring Boot.
 - **Flapdoodle Embedded MongoDB**: Para rodar MongoDB em memória durante os testes.
-
-## Docker
-- **Docker** (`versão 27.4.1`) e docker-compose (`versão 1.29.2`): Usados para criar containers para o ambiente de desenvolvimento e o banco de dados, garantindo consistência entre os ambientes de desenvolvimento e produção.
+- **Github Actions**: Criação de workflows  executar e build, testes unitários e de testes de integração do projeto.
 
