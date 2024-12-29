@@ -21,8 +21,8 @@ jobs:
       - name: Install Maven
         run: sudo apt-get install -y maven
 
-      - name: Run Unit Tests
-        run: mvn test
+      - name: Run Unit Tests and Generate Coverage Report
+        run: mvn verify
         working-directory: .
 
       - name: Upload coverage to Codecov
