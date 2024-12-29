@@ -8,12 +8,12 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class WishlistEntityApplicationTests {
+class WishlistEntityApplicationTest {
 
-	@MockitoBean
-	private WishlistRepository wishlistRepository;
+    @MockitoBean
+    private WishlistRepository wishlistRepository;
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 }
