@@ -58,20 +58,6 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 
-		<!-- Groovy Dependencies -->
-		<dependency>
-			<groupId>org.codehaus.groovy</groupId>
-			<artifactId>groovy</artifactId>
-			<version>3.0.8</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.groovy</groupId>
-			<artifactId>groovy-xml</artifactId>
-			<version>3.0.8</version>
-			<scope>test</scope>
-		</dependency>
-
 		<!-- JUnit and Cucumber Dependencies -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
