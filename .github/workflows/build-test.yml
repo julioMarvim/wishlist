@@ -23,14 +23,14 @@ jobs:
 
       - name: Run Unit Tests
         run: mvn test
-        working-directory: ./app
+        working-directory: .
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4.0.1
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
-          files: ./app/target/site/jacoco/jacoco.xml
+          files: ./target/site/jacoco/jacoco.xml
 
   integration-tests:
     runs-on: ubuntu-latest
@@ -50,7 +50,7 @@ jobs:
 
       - name: Run Integration Tests
         run: mvn integration-test
-        working-directory: ./app
+        working-directory: .
 
   build-docker:
     runs-on: ubuntu-latest
@@ -70,7 +70,7 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean package
-        working-directory: ./app
+        working-directory: .
 
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag wishlist:$(date +%s)
