@@ -126,31 +126,40 @@ docker-compose down
 docker-compose up --build
 ```
 
-Para **finalizar a execução da API**, execute:
-
-```bash
-docker-compose down
-```
-
 ## Exemplos de requisições
 
 Aqui estão alguns exemplos de requisições para interagir com a API:
 Deixei uma **collection** do insomnia disponível com todos os endpoints para testes
 locais: [Collection Insomia](wishlist-collection.json)
 
+# Wishlist API Documentation
+
+## Endpoints
+
 ### Adicionar um produto à wishlist
 
 ```bash
 curl --request POST \
-  --url http://localhost:8080/api/v1/wishlist/6 \
+  --url http://localhost:8080/api/v1/wishlist/{clientId} \
   --header 'Content-Type: application/json' \
   --header 'User-Agent: insomnia/10.3.0' \
   --data '{
     "id": "productId",
     "name": "Product Name",
     "description": "Product Description"
-}
+}'
 ```
+
+**Parâmetros:**
+
+| Parâmetro      | Tipo   | Obrigatório | Descrição                       |
+|----------------|--------|-------------|---------------------------------|
+| `clientId`     | string | Sim         | ID do cliente.                 |
+| `id`           | string | Sim         | ID do produto a ser adicionado.|
+| `name`         | string | Sim         | Nome do produto.               |
+| `description`  | string | não         | Descrição do produto.          |
+
+---
 
 ### Obter a wishlist de um cliente
 
@@ -158,7 +167,15 @@ curl --request POST \
 curl --request GET \
   --url http://localhost:8080/api/v1/wishlist/{clientId} \
   --header 'User-Agent: insomnia/10.3.0'
-  ```
+```
+
+**Parâmetros:**
+
+| Parâmetro      | Tipo   | Obrigatório | Descrição                       |
+|----------------|--------|-------------|---------------------------------|
+| `clientId`     | string | Sim         | ID do cliente.                 |
+
+---
 
 ### Verificar se um produto está na wishlist
 
@@ -166,7 +183,16 @@ curl --request GET \
 curl --request GET \
   --url http://localhost:8080/api/v1/wishlist/{clientId}/{productId}/exists \
   --header 'User-Agent: insomnia/10.3.0'
-  ```
+```
+
+**Parâmetros:**
+
+| Parâmetro      | Tipo   | Obrigatório | Descrição                       |
+|----------------|--------|-------------|---------------------------------|
+| `clientId`     | string | Sim         | ID do cliente.                 |
+| `productId`    | string | Sim         | ID do produto a verificar.     |
+
+---
 
 ### Remover um produto da wishlist
 
@@ -174,7 +200,15 @@ curl --request GET \
 curl --request DELETE \
   --url http://localhost:8080/api/v1/wishlist/{clientId}/{productId} \
   --header 'User-Agent: insomnia/10.3.0'
-  ```
+```
+
+**Parâmetros:**
+
+| Parâmetro      | Tipo   | Obrigatório | Descrição                       |
+|----------------|--------|-------------|---------------------------------|
+| `clientId`     | string | Sim         | ID do cliente.                 |
+| `productId`    | string | Sim         | ID do produto a ser removido.  |
+
 
 ## Documentação da API
 
@@ -249,8 +283,8 @@ Aqui estão as dependências principais do projeto, relevantes para os testes e 
 
 ### Linguagens e Frameworks
 
-Java (versão 17): A linguagem de programação utilizada neste projeto.
-Spring Boot (versão 3.4.1): O framework utilizado para construir a API.
+Java (`versão 17`): A linguagem de programação utilizada neste projeto.
+Spring Boot (`versão 3.4.1`): O framework utilizado para construir a API.
 
 ## Banco de Dados
 
@@ -262,5 +296,5 @@ Spring Boot (versão 3.4.1): O framework utilizado para construir a API.
 - **JUnit** (`versão 5.10.3`): O framework principal para os testes no projeto.
 - **Cucumber** (`versão 7.14.0`): Para testes de BDD.
 - **Spring Boot Starter Test**: Um conjunto de ferramentas para facilitar os testes em aplicações Spring Boot.
-- **Flapdoodle Embedded MongoDB**: Para rodar MongoDB em memória durante os testes.
+- **Flapdoodle Embedded MongoDB spring30x**: (`versão 4.5.2`) Para rodar MongoDB em memória durante os testes.
 
