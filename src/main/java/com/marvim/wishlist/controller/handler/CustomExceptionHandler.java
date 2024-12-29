@@ -60,7 +60,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(errorResponse));
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler({Exception.class, RuntimeException.class})
     public ResponseEntity<ApiResponse<?>> handleException(Exception ex) {
         List<ErrorDetail> errors = List.of(
                 new ErrorDetail(null, "An unexpected error occurred: " + ex.getMessage())
