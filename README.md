@@ -21,7 +21,7 @@ para um e-comrece. Ela permite realizar as seguintes operações:
 
 ## Decisões de Projeto
 
-Durante o desenvolvimento deta API de Wishlist, algumas decisões importantes foram tomadas para garantir simplicidade,
+Durante o desenvolvimento desta API de Wishlist, algumas decisões importantes foram tomadas para garantir simplicidade,
 funcionalidade e maior alinhamento com os requisitos do projeto. Vou listar as principais escolhas bem como suas
 respectivas justificativas:
 
@@ -56,7 +56,7 @@ respectivas justificativas:
 
 ## Execução da API
 
-## Pré requisitos:
+## Pré-requisitos:
 
 ### Docker
 
@@ -97,7 +97,7 @@ Certifique-se de seguir os passos abaixo para garantir que o projeto funcione co
 
 ### 1. Clonando o Repositório
 
-Para obter o código fonte do projeto, execute o seguinte comando no terminal:
+Para obter o código-fonte do projeto, execute o seguinte comando no terminal:
 
 ```bash
 git clone https://github.com/julioMarvim/wishlist.git
@@ -112,17 +112,22 @@ Certifique-se de que a porta `8080` está disponível no seu ambiente antes de i
 Com todos os pré-requisitos configurados navegue até a pasta raiz do projeto (`wishlist`), e execute os seguintes
 comandos:
 
-Para **inicia os containers em segundo plano** execute:
+**Como passo inicial**, sugiro executar o comando (`docker-compose down`) quando for rodar a primeira vez, só por garantia.
+Caso tenha algum conflito de rede do docker ou alguma outra aplicação rodando no docker ocupando a porta `8080`
 
 ```bash
 docker-compose down
+```
+
+Para **iniciar os containers em segundo plano** execute:
+
+```bash
 docker-compose up --build -d
 ```
 
 Para **iniciar os containers em primeiro plano** execute:
 
 ```bash
-docker-compose down
 docker-compose up --build
 ```
 
