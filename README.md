@@ -186,7 +186,7 @@ Este projeto está configurado para rodar testes automatizados utilizando os seg
 - 
 ### Para rodar os testes, use o seguinte comando Maven:
 
-Primeiramente certifique-se navegar até a pasta (`wishlist/app/`) do projeto antes de rodar a aplicação.
+Primeiramente certifique-se navegar até a pasta (`wishlist`) do projeto antes de rodar a aplicação.
 ```bash
     mvn clean test integration-test
 ```
