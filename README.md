@@ -21,7 +21,7 @@ para um e-comrece. Ela permite realizar as seguintes operações:
 
 ## Decisões de Projeto
 
-Durante o desenvolvimento deta API de Wishlist, algumas decisões importantes foram tomadas para garantir simplicidade,
+Durante o desenvolvimento desta API de Wishlist, algumas decisões importantes foram tomadas para garantir simplicidade,
 funcionalidade e maior alinhamento com os requisitos do projeto. Vou listar as principais escolhas bem como suas
 respectivas justificativas:
 
@@ -36,7 +36,7 @@ respectivas justificativas:
 
 - **Decisão**: Todas as exceções foram centralizadas em um único contexto global.
 - **Justificativa**: Esta é uma API é pequena, então não houve necessidade de separar as exceções por camadas. Fiz isso
-  para reduzir a complexidade e facilitar o rastreamento de erros, garantindo que todas as exceções sejam tratados de
+  para reduzir a complexidade e facilitar o rastreamento de erros, garantindo que todas as exceções sejam tratadas de
   forma centralizada.
 
 ### 3. Validações no Repositório
@@ -56,7 +56,7 @@ respectivas justificativas:
 
 ## Execução da API
 
-## Pré requisitos:
+## Pré-requisitos:
 
 ### Docker
 
@@ -97,7 +97,7 @@ Certifique-se de seguir os passos abaixo para garantir que o projeto funcione co
 
 ### 1. Clonando o Repositório
 
-Para obter o código fonte do projeto, execute o seguinte comando no terminal:
+Para obter o código-fonte do projeto, execute o seguinte comando no terminal:
 
 ```bash
 git clone https://github.com/julioMarvim/wishlist.git
@@ -112,17 +112,22 @@ Certifique-se de que a porta `8080` está disponível no seu ambiente antes de i
 Com todos os pré-requisitos configurados navegue até a pasta raiz do projeto (`wishlist`), e execute os seguintes
 comandos:
 
-Para **inicia os containers em segundo plano** execute:
+**Como passo inicial**, sugiro executar o comando (`docker-compose down`) quando for rodar a primeira vez, só por garantia.
+Caso tenha algum conflito de rede do docker ou alguma outra aplicação rodando no docker ocupando a porta `8080`
 
 ```bash
 docker-compose down
+```
+
+Para **iniciar os containers em segundo plano** execute:
+
+```bash
 docker-compose up --build -d
 ```
 
 Para **iniciar os containers em primeiro plano** execute:
 
 ```bash
-docker-compose down
 docker-compose up --build
 ```
 
@@ -250,7 +255,6 @@ Este projeto está configurado para rodar testes automatizados utilizando os seg
 - **Cucumber**: Para testes com Desenvolvimento Orientado por Comportamento (BDD), integrado ao JUnit para execução.
 - **Flapdoodle Embedded MongoDB**: Para testes com uma instância embutida do MongoDB, simulando o banco de dados em
   testes de integração.
--
 
 ### Para rodar os testes, use o seguinte comando Maven:
 
@@ -283,8 +287,9 @@ Aqui estão as dependências principais do projeto, relevantes para os testes e 
 
 ### Linguagens e Frameworks
 
-Java (`versão 17`): A linguagem de programação utilizada neste projeto.
-Spring Boot (`versão 3.4.1`): O framework utilizado para construir a API.
+**Java** (`versão 17`): A linguagem de programação utilizada neste projeto.
+
+**Spring Boot** (`versão 3.4.1`): O framework utilizado para construir a API.
 
 ## Banco de Dados
 
