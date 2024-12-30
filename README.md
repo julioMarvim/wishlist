@@ -36,7 +36,7 @@ respectivas justificativas:
 
 - **Decisão**: Todas as exceções foram centralizadas em um único contexto global.
 - **Justificativa**: Esta é uma API é pequena, então não houve necessidade de separar as exceções por camadas. Fiz isso
-  para reduzir a complexidade e facilitar o rastreamento de erros, garantindo que todas as exceções sejam tratados de
+  para reduzir a complexidade e facilitar o rastreamento de erros, garantindo que todas as exceções sejam tratadas de
   forma centralizada.
 
 ### 3. Validações no Repositório
@@ -255,7 +255,6 @@ Este projeto está configurado para rodar testes automatizados utilizando os seg
 - **Cucumber**: Para testes com Desenvolvimento Orientado por Comportamento (BDD), integrado ao JUnit para execução.
 - **Flapdoodle Embedded MongoDB**: Para testes com uma instância embutida do MongoDB, simulando o banco de dados em
   testes de integração.
--
 
 ### Para rodar os testes, use o seguinte comando Maven:
 
@@ -288,8 +287,9 @@ Aqui estão as dependências principais do projeto, relevantes para os testes e 
 
 ### Linguagens e Frameworks
 
-Java (`versão 17`): A linguagem de programação utilizada neste projeto.
-Spring Boot (`versão 3.4.1`): O framework utilizado para construir a API.
+**Java** (`versão 17`): A linguagem de programação utilizada neste projeto.
+
+**Spring Boot** (`versão 3.4.1`): O framework utilizado para construir a API.
 
 ## Banco de Dados
 
